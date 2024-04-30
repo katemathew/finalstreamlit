@@ -84,11 +84,22 @@ def fetch_and_save_spotify_data():
     sp = spotipy.Spotify(client_credentials_manager=credentials)
 
     # Connect to Heroku PostgreSQL database
-    database_url = os.getenv("DATABASE_URL").replace("postgres://", "postgresql://")
-    engine = create_engine(database_url)
-    Base.metadata.create_all(engine)
-    Session = sessionmaker(bind=engine)
-    session = Session()
+    # Load environment variables from database.env file
+from dotenv import dotenv_values
+env_vars = dotenv_values("database.env")
+
+# Extract the DATABASE_URL variable
+database_url = env_vars.get("DATABASE_URL", "")
+
+# Replace the postgres:// with postgresql:// if needed
+if database_url.startswith("postgres://"):
+    database_url = database_url.replace("postgres://", "postgresql://")
+
+    # database_url = os.getenv("DATABASE_URL").replace("postgres://", "postgresql://")
+    # engine = create_engine(database_url)
+    # Base.metadata.create_all(engine)
+    # Session = sessionmaker(bind=engine)
+    # session = Session()
 
     artist_uris = {
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
