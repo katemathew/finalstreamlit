@@ -142,25 +142,33 @@ def load_spotify_tracks_db():
     session = Session()
 
     try:
-        # Explicitly define the join condition between Track and Artist
-        from sqlalchemy.orm import joinedload
-        query = session.query(Track).options(joinedload(Track.album).joinedload(Album.artist))
-        tracks = pd.read_sql(query.statement, engine)
-
-        # Optionally, you can explicitly specify the columns and perform the join using the following approach
-        # This uses the `join` method to explicitly state how Track and Artist are related via Album
+        # Explicitly specify the starting point and path for the joins
+        from sqlalchemy.orm import aliased
+        
+        # Aliasing the tables might help in complex queries where same table is joined multiple times
+        artist_alias = aliased(Artist)
+        album_alias = aliased(Album)
+        track_alias = aliased(Track)
+        
+        # Constructing the query
         query = session.query(
-            Track.id, Track.name, Track.popularity, Track.duration_ms,
-            Album.name.label('album_name'),
-            Artist.name.label('artist_name')
-        ).join(Album).join(Artist)
+            track_alias.id.label('track_id'),
+            track_alias.name.label('track_name'),
+            track_alias.popularity,
+            track_alias.duration_ms,
+            album_alias.name.label('album_name'),
+            artist_alias.name.label('artist_name')
+        ).select_from(track_alias) \
+        .join(album_alias, track_alias.album_id == album_alias.id) \
+        .join(artist_alias, album_alias.artist_id == artist_alias.id)
+
+        # Executing the query and loading into DataFrame
         tracks = pd.read_sql(query.statement, engine)
 
     finally:
         session.close()
 
     return tracks
-
 # Analyze overlaps
 def analyze_overlaps(df1, df2, key='Artist'):
     return pd.merge(df1, df2, on=key, how='inner')
