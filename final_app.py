@@ -142,14 +142,14 @@ def load_spotify_tracks_db():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    try:
-        tracks = pd.read_sql_table('tracks', engine)
-        albums = pd.read_sql_table('albums', engine)
-        artists = pd.read_sql_table('artists', engine)
-    finally:
-        session.close()
+    # try:
+    #     tracks = pd.read_sql_table('tracks', engine)
+    #     albums = pd.read_sql_table('albums', engine)
+    #     artists = pd.read_sql_table('artists', engine)
+    # finally:
+    #     session.close()
 
-    return tracks, albums, artists
+    # return tracks, albums, artists
 
 
 # Function to analyze overlaps
