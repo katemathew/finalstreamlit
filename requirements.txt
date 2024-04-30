@@ -3,4 +3,4 @@ pandas
 matplotlib
 sqlalchemy
 python-dotenv
-spotipy.oauth2
+spotipy
