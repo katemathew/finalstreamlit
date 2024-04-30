@@ -74,8 +74,18 @@ def fetch_artist_top_tracks(sp, artist_uri):
     return tracks_data
 
 def fetch_and_save_spotify_data():
+    env_vars = dotenv_values("database.env")  # Ensure this points to your correct .env file location
+    database_url = env_vars.get("DATABASE_URL", "")
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://")
+    
+    # Check if database URL is retrieved and log the error if not
+    if not database_url:
+        logging.error("DATABASE_URL not found. Check your .env file.")
+        return  # Exit the function if the URL is not found
+
     # Database connection setup
-    engine = create_engine(os.getenv("DATABASE_URL").replace("postgres://", "postgresql://"))
+    engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
 
