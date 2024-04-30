@@ -72,7 +72,7 @@ def fetch_and_save_spotify_data():
         'Bad Bunny': 'spotify:artist:4q3ewBCX7sLwd24euuV69X',
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
         'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4',
-        'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ'
+        'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ',
         'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM'
     }
 
