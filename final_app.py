@@ -122,61 +122,44 @@ def fetch_and_save_spotify_data():
     finally:
         session.close()
 
-# Your main function and other Streamlit components as before
-
-
-
-# Function to load data
 def load_setlist_data():
-    return pd.read_csv('setlist_data.csv')
+    df = pd.read_csv('setlist_data.csv')
+    df.rename(columns={'Artist Name': 'Artist'}, inplace=True)
+    return df
 
 def load_filtered_spotify_data():
-    return pd.read_csv('filtered_spotify_data.csv')
+    df = pd.read_csv('filtered_spotify_data.csv')
+    df.rename(columns={'artists': 'Artist'}, inplace=True)
+    return df
 
 def load_spotify_tracks_db():
-    # Hardcoded database URL
-    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
-
-    # Database connection setup
+    database_url = os.getenv("DATABASE_URL")
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    try:
-        tracks = pd.read_sql_table('tracks', engine)
-        albums = pd.read_sql_table('albums', engine)
-        artists = pd.read_sql_table('artists', engine)
-    finally:
-        session.close()
+    tracks = pd.read_sql(session.query(Track, Artist.name.label('Artist')).join(Artist).statement, engine)
+    session.close()
+    return tracks
 
-    return tracks, albums, artists
-
-
-# Function to analyze overlaps
+# Analyze overlaps
 def analyze_overlaps(df1, df2, key='Artist'):
     return pd.merge(df1, df2, on=key, how='inner')
 
-
-# Visualizing data
+# Visualization
 def plot_data(df):
     fig, ax = plt.subplots()
-    # Example plot: popularity distribution
     df['popularity'].hist(ax=ax)
     st.pyplot(fig)
 
+# Main function for Streamlit
 def main():
-    # Fetch and save Spotify data to the database
-    fetch_and_save_spotify_data()
-
-    # Layout
     st.title('Music Data Analysis App')
 
-    # Load data
     setlist_data = load_setlist_data()
     spotify_data = load_filtered_spotify_data()
-    tracks, albums, artists = load_spotify_tracks_db()
+    tracks = load_spotify_tracks_db()
 
-    # Display data
     st.header('Setlist Data')
     st.write(setlist_data.head())
 
@@ -186,13 +169,10 @@ def main():
     st.header('Spotify Tracks Data')
     st.write(tracks.head())
 
-
-    # Overlaps
-    st.header('Overlaps in Artists')
     overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
+    st.header('Overlaps in Artists')
     st.write(overlaps)
 
-    # Visualization
     st.header('Song Popularity Analysis')
     plot_data(tracks)
 
