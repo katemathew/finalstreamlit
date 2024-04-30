@@ -66,6 +66,10 @@ def fetch_artist_top_tracks(artist_uri):
         tracks_data.append(track_data)
     return tracks_data
 
+def clean_artist_name(name):
+    """Clean artist names by removing unwanted characters and making them lowercase."""
+    return name.replace('[', '').replace(']', '').replace("'", "").strip().lower()
+
 def fetch_and_save_spotify_data():
     artist_uris = {
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
@@ -111,15 +115,25 @@ def fetch_and_save_spotify_data():
 # Remaining functions remain unchanged
 
 
+# def load_setlist_data():
+#     df = pd.read_csv('setlist_data.csv')
+#     df.rename(columns={'Artist Name': 'Artist'}, inplace=True)
+#     return df
+
+# def load_filtered_spotify_data():
+#     df = pd.read_csv('filtered_spotify_data.csv')
+#     # Removing brackets and quotes from artist names
+#     df['Artist'] = df['artists'].str.replace(r"[\[\]']", "", regex=True)
+#     return df
+
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
-    df.rename(columns={'Artist Name': 'Artist'}, inplace=True)
+    df['Artist'] = df['Artist Name'].apply(clean_artist_name)
     return df
 
 def load_filtered_spotify_data():
     df = pd.read_csv('filtered_spotify_data.csv')
-    # Removing brackets and quotes from artist names
-    df['Artist'] = df['artists'].str.replace(r"[\[\]']", "", regex=True)
+    df['Artist'] = df['artists'].apply(clean_artist_name)
     return df
 
 def load_spotify_tracks_db():
@@ -152,8 +166,12 @@ def load_spotify_tracks_db():
 
     return tracks
 
+# def analyze_overlaps(df1, df2, key='Artist'):
+#     return pd.merge(df1, df2, on=key, how='inner')
+
 def analyze_overlaps(df1, df2, key='Artist'):
-    return pd.merge(df1, df2, on=key, how='inner')
+    common = pd.merge(df1, df2, on=key, how='inner')
+    return common
 
 def plot_data(df):
     if df.empty:
