@@ -141,21 +141,19 @@ def load_spotify_tracks_db():
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
-    
+
     try:
         tracks = pd.read_sql_table('tracks', engine)
         albums = pd.read_sql_table('albums', engine)
         artists = pd.read_sql_table('artists', engine)
-        # This line might also throw an error if the schema does not match or the join is incorrect
-        tracks = pd.read_sql(session.query(Track, Artist.name.label('artist_name')).join(Artist).statement, engine)
     finally:
         session.close()
+
     return tracks, albums, artists
+
 
 # Function to analyze overlaps
 def analyze_overlaps(df1, df2, key='Artist'):
-    if key not in df1.columns or key not in df2.columns:
-        raise ValueError(f"Column {key} not found in one of the dataframes")
     return pd.merge(df1, df2, on=key, how='inner')
 
 # Visualizing data
@@ -185,8 +183,7 @@ def main():
     st.write(spotify_data.head())
 
     st.header('Spotify Tracks Data')
-    st.write("Tracks Data:", tracks[['name', 'artist_name', 'popularity']].head())
-
+    st.write(tracks.head())
 
     # Overlaps
     st.header('Overlaps in Artists')
