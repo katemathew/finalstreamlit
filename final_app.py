@@ -116,7 +116,8 @@ def load_setlist_data():
 
 def load_filtered_spotify_data():
     df = pd.read_csv('filtered_spotify_data.csv')
-    df['Artist'] = df['artists'].str.replace(r"\[|\]|'", "")
+    # Removing brackets and quotes from artist names
+    df['Artist'] = df['artists'].str.replace(r"[\[\]']", "", regex=True)
     return df
 
 def load_spotify_tracks_db():
@@ -132,11 +133,11 @@ def load_spotify_tracks_db():
         tracks = pd.read_sql(
             session.query(
                 Track.id.label('track_id'),
-                Track.name.label('track_name'),
+                Track.name.label('name'),
                 Track.popularity,
                 Track.duration_ms,
-                Album.name.label('album_name'),
-                Artist.name.label('artist_name')
+                Album.name.label('Album'),
+                Artist.name.label('Artist')
             )
             .select_from(Track)
             .join(Album, Track.album_id == Album.id)
