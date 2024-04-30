@@ -141,8 +141,24 @@ def load_spotify_tracks_db():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    tracks = pd.read_sql(session.query(Track, Artist.name.label('Artist')).join(Artist).statement, engine)
-    session.close()
+    try:
+        # Explicitly define the join condition between Track and Artist
+        from sqlalchemy.orm import joinedload
+        query = session.query(Track).options(joinedload(Track.album).joinedload(Album.artist))
+        tracks = pd.read_sql(query.statement, engine)
+
+        # Optionally, you can explicitly specify the columns and perform the join using the following approach
+        # This uses the `join` method to explicitly state how Track and Artist are related via Album
+        query = session.query(
+            Track.id, Track.name, Track.popularity, Track.duration_ms,
+            Album.name.label('album_name'),
+            Artist.name.label('artist_name')
+        ).join(Album).join(Artist)
+        tracks = pd.read_sql(query.statement, engine)
+
+    finally:
+        session.close()
+
     return tracks
 
 # Analyze overlaps
