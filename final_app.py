@@ -134,13 +134,23 @@ def load_filtered_spotify_data():
     return pd.read_csv('filtered_spotify_data.csv')
 
 def load_spotify_tracks_db():
-    engine = create_engine(os.getenv("DATABASE_URL").replace("postgres://", "postgresql://"))
+    # Hardcoded database URL
+    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
+
+    # Database connection setup
+    engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
-    tracks = pd.read_sql_table('tracks', engine)
-    albums = pd.read_sql_table('albums', engine)
-    artists = pd.read_sql_table('artists', engine)
+
+    try:
+        tracks = pd.read_sql_table('tracks', engine)
+        albums = pd.read_sql_table('albums', engine)
+        artists = pd.read_sql_table('artists', engine)
+    finally:
+        session.close()
+
     return tracks, albums, artists
+
 
 # Function to analyze overlaps
 def analyze_overlaps(df1, df2, key='Artist'):
