@@ -171,13 +171,27 @@ def load_spotify_tracks_db():
     return tracks
 # Analyze overlaps
 def analyze_overlaps(df1, df2, key='Artist'):
+    if key not in df1 or key not in df2:
+        st.error(f"Key '{key}' is missing from one of the dataframes.")
+        return pd.DataFrame()
+    common_artists = set(df1[key]).intersection(set(df2[key]))
+    if not common_artists:
+        st.write("No common artists found for merging.")
+        return pd.DataFrame()
     return pd.merge(df1, df2, on=key, how='inner')
+
 
 # Visualization
 def plot_data(df):
+    if df.empty:
+        st.write("No data available to plot.")
+        return
+
+    # Create a new figure and axes
     fig, ax = plt.subplots()
     df['popularity'].hist(ax=ax)
     st.pyplot(fig)
+
 
 # Main function for Streamlit
 def main():
@@ -195,6 +209,12 @@ def main():
 
     st.header('Spotify Tracks Data')
     st.write(tracks.head())
+
+    st.write(setlist_data['Artist'].unique())
+    st.write(spotify_data['Artist'].unique())
+
+    setlist_data['Artist'] = setlist_data['Artist'].str.strip().str.title()
+    spotify_data['Artist'] = spotify_data['Artist'].str.strip().str.title()
 
     overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
     st.header('Overlaps in Artists')
