@@ -4,3 +4,4 @@ matplotlib
 sqlalchemy
 python-dotenv
 spotipy
+psycopg2-binary
