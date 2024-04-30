@@ -122,8 +122,27 @@ def load_spotify_tracks_db():
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
-    tracks = pd.read_sql(session.query(Track, Artist.name.label('Artist')).join(Artist).statement, engine)
-    session.close()
+
+    try:
+        # Using select_from to explicitly start from Track and join to Album and Artist
+        tracks = pd.read_sql(
+            session.query(
+                Track.id.label('track_id'),
+                Track.name.label('track_name'),
+                Track.popularity,
+                Track.duration_ms,
+                Album.name.label('album_name'),
+                Artist.name.label('artist_name')
+            )
+            .select_from(Track)
+            .join(Album, Track.album_id == Album.id)
+            .join(Artist, Album.artist_id == Artist.id)
+            .statement, 
+            engine
+        )
+    finally:
+        session.close()
+
     return tracks
 
 def analyze_overlaps(df1, df2, key='Artist'):
