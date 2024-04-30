@@ -43,8 +43,8 @@ class Track(Base):
     album = relationship("Album", back_populates="tracks")
 
 # Initialize Spotify client
-client_id = os.getenv('SPOTIPY_CLIENT_ID')
-client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
+client_id = '5b2023b50cd44ccca291f436252f1381'
+client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
 credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=credentials)
 
@@ -75,7 +75,9 @@ def fetch_and_save_spotify_data():
         'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ'
     }
 
-    database_url = os.getenv("DATABASE_URL")
+    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
+
+    # Database connection setup
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
