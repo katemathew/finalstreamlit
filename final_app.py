@@ -4,40 +4,55 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
-from dotenv import dotenv_values
+from dotenv import load_dotenv, dotenv_values
 import logging
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
+
+# Load environment variables from .env file
+load_dotenv()
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Base declaration for SQLAlchemy ORM
+# Ensure other necessary imports and your robust_fetch, Artist, Album, Track classes are declared
 Base = declarative_base()
 
-# Define ORM models
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
+
 class Artist(Base):
     __tablename__ = 'artists'
+
     id = Column(String, primary_key=True)
     name = Column(String)
+
+    # This relationship will allow you to access an artist's albums directly
     albums = relationship("Album", back_populates="artist")
 
 class Album(Base):
     __tablename__ = 'albums'
+
     id = Column(String, primary_key=True)
     name = Column(String)
     release_date = Column(String)
     artist_id = Column(String, ForeignKey('artists.id'))
+
+    # This relationship links back to the artist and to the tracks
     artist = relationship("Artist", back_populates="albums")
     tracks = relationship("Track", back_populates="album")
 
 class Track(Base):
     __tablename__ = 'tracks'
+
     id = Column(String, primary_key=True)
     name = Column(String)
     popularity = Column(Integer)
     duration_ms = Column(Integer)
     album_id = Column(String, ForeignKey('albums.id'))
+
+    # This relationship links back to the album
     album = relationship("Album", back_populates="tracks")
 
 def fetch_artist_top_tracks(sp, artist_uri):
@@ -58,20 +73,13 @@ def fetch_artist_top_tracks(sp, artist_uri):
         tracks_data.append(track_data)
     return tracks_data
 
-def get_database_url():
-    # Use dotenv_values to load the DATABASE_URL
-    env_vars = dotenv_values(".env")  # Ensure this points to your .env file location
-    database_url = env_vars.get("DATABASE_URL", "")
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://")
-    return database_url
-
 def fetch_and_save_spotify_data():
-    database_url = get_database_url()
-    engine = create_engine(database_url)
+    # Database connection setup
+    engine = create_engine(os.getenv("DATABASE_URL").replace("postgres://", "postgresql://"))
     Session = sessionmaker(bind=engine)
     session = Session()
 
+    # Spotify client setup
     client_id = '5b2023b50cd44ccca291f436252f1381'
     client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
     credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
@@ -112,7 +120,9 @@ def fetch_and_save_spotify_data():
     finally:
         session.close()
 
-# Streamlit functions and main function remains unchanged
+# Your main function and other Streamlit components as before
+
+
 
 # Function to load data
 def load_setlist_data():
