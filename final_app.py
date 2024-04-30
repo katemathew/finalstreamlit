@@ -160,6 +160,8 @@ def plot_data(df):
         return
     fig, ax = plt.subplots()
     df['popularity'].hist(ax=ax)
+    ax.set_xlabel('Popularity')  # Adding an X-axis label
+    ax.set_ylabel('Frequency')  # Adding a Y-axis label
     st.pyplot(fig)
 
 def main():
