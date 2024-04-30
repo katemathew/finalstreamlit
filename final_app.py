@@ -74,20 +74,16 @@ def fetch_artist_top_tracks(sp, artist_uri):
     return tracks_data
 
 def fetch_and_save_spotify_data():
+    # Database connection setup
+    engine = create_engine(os.getenv("DATABASE_URL").replace("postgres://", "postgresql://"))
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    # Spotify client setup
     client_id = '5b2023b50cd44ccca291f436252f1381'
     client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
     credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
     sp = spotipy.Spotify(client_credentials_manager=credentials)
-    # Connect to Heroku PostgreSQL database
-    from dotenv import dotenv_values
-    env_vars = dotenv_values("database.env")
-
-    # Extract the DATABASE_URL variable
-    database_url = env_vars.get("DATABASE_URL", "")
-
-    # Replace the postgres:// with postgresql:// if needed
-    if database_url.startswith("postgres://"):
-        database_url = database_url.replace("postgres://", "postgresql://")
 
     artist_uris = {
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
@@ -97,26 +93,35 @@ def fetch_and_save_spotify_data():
         'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ'
     }
 
-    for artist_name, artist_uri in artist_uris.items():
-        tracks_data = fetch_artist_top_tracks(sp, artist_uri)
-        for data in tracks_data:
-            artist = session.query(Artist).filter_by(id=data['artist_id']).first()
-            if not artist:
-                artist = Artist(id=data['artist_id'], name=data['artist_name'])
-                session.add(artist)
+    try:
+        for artist_name, artist_uri in artist_uris.items():
+            tracks_data = fetch_artist_top_tracks(sp, artist_uri)
+            for data in tracks_data:
+                artist = session.query(Artist).filter_by(id=data['artist_id']).first()
+                if not artist:
+                    artist = Artist(id=data['artist_id'], name=data['artist_name'])
+                    session.add(artist)
 
-            album = session.query(Album).filter_by(id=data['album_id']).first()
-            if not album:
-                album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
-                session.add(album)
+                album = session.query(Album).filter_by(id=data['album_id']).first()
+                if not album:
+                    album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
+                    session.add(album)
 
-            track = session.query(Track).filter_by(id=data['track_id']).first()
-            if not track:
-                track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
-                session.add(track)
+                track = session.query(Track).filter_by(id=data['track_id']).first()
+                if not track:
+                    track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
+                    session.add(track)
 
-        session.commit()
-        logging.info(f"Data for {artist_name} successfully saved to the database")
+            session.commit()
+            logging.info(f"Data for {artist_name} successfully saved to the database")
+    except Exception as e:
+        logging.error(f"An error occurred: {e}")
+        session.rollback()
+    finally:
+        session.close()
+
+# Your main function and other Streamlit components as before
+
 
 
 # Function to load data
