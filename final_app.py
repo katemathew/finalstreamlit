@@ -2,16 +2,13 @@ import os
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from dotenv import load_dotenv
-from dotenv import dotenv_values
-from spotipy.oauth2 import SpotifyClientCredentials
+from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from dotenv import load_dotenv, dotenv_values
 import logging
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+
 
 # Load environment variables from .env file
 load_dotenv()
@@ -79,21 +76,18 @@ def fetch_artist_top_tracks(sp, artist_uri):
 def fetch_and_save_spotify_data():
     client_id = '5b2023b50cd44ccca291f436252f1381'
     client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
-
-    # Initialize Spotify client credentials with hardcoded values
     credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
     sp = spotipy.Spotify(client_credentials_manager=credentials)
-
     # Connect to Heroku PostgreSQL database
     from dotenv import dotenv_values
-env_vars = dotenv_values("database.env")
+    env_vars = dotenv_values("database.env")
 
-# Extract the DATABASE_URL variable
-database_url = env_vars.get("DATABASE_URL", "")
+    # Extract the DATABASE_URL variable
+    database_url = env_vars.get("DATABASE_URL", "")
 
-# Replace the postgres:// with postgresql:// if needed
-if database_url.startswith("postgres://"):
-    database_url = database_url.replace("postgres://", "postgresql://")
+    # Replace the postgres:// with postgresql:// if needed
+    if database_url.startswith("postgres://"):
+        database_url = database_url.replace("postgres://", "postgresql://")
 
     artist_uris = {
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
