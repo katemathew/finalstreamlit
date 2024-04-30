@@ -150,10 +150,7 @@ def load_spotify_tracks_db():
         tracks = pd.read_sql(session.query(Track, Artist.name.label('artist_name')).join(Artist).statement, engine)
     finally:
         session.close()
-
     return tracks, albums, artists
-
-
 
 # Function to analyze overlaps
 def analyze_overlaps(df1, df2, key='Artist'):
