@@ -141,16 +141,18 @@ def load_spotify_tracks_db():
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
-
+    
     try:
         tracks = pd.read_sql_table('tracks', engine)
         albums = pd.read_sql_table('albums', engine)
         artists = pd.read_sql_table('artists', engine)
+        # This line might also throw an error if the schema does not match or the join is incorrect
         tracks = pd.read_sql(session.query(Track, Artist.name.label('artist_name')).join(Artist).statement, engine)
     finally:
         session.close()
 
     return tracks, albums, artists
+
 
 
 # Function to analyze overlaps
