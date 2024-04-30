@@ -76,9 +76,10 @@ def fetch_artist_top_tracks(sp, artist_uri):
     return tracks_data
 
 def fetch_and_save_spotify_data():
-    client_id = os.getenv('SPOTIFY_CLIENT_ID')
-    client_secret = os.getenv('SPOTIFY_CLIENT_SECRET')
+    client_id = '5b2023b50cd44ccca291f436252f1381'
+    client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
 
+    # Initialize Spotify client credentials with hardcoded values
     credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
     sp = spotipy.Spotify(client_credentials_manager=credentials)
 
