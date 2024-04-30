@@ -73,6 +73,7 @@ def fetch_and_save_spotify_data():
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
         'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4',
         'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ'
+        'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM'
     }
 
     database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
