@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+from dotenv import dotenv_values
 from spotipy.oauth2 import SpotifyClientCredentials
 import logging
 import spotipy
