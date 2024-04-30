@@ -128,7 +128,8 @@ def fetch_and_save_spotify_data():
 
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
-    df['Artist'] = df['Artist Name'].apply(clean_artist_name)
+    # Ensure the column 'Artist' exists. If the column name is different, adjust it here.
+    df['Artist'] = df['Artist'].apply(clean_artist_name)
     return df
 
 def load_filtered_spotify_data():
