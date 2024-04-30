@@ -42,7 +42,13 @@ class Track(Base):
     album_id = Column(String, ForeignKey('albums.id'))
     album = relationship("Album", back_populates="tracks")
 
-def fetch_artist_top_tracks(sp, artist_uri):
+# Initialize Spotify client
+client_id = os.getenv('SPOTIPY_CLIENT_ID')
+client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
+credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
+sp = spotipy.Spotify(client_credentials_manager=credentials)
+
+def fetch_artist_top_tracks(artist_uri):
     results = sp.artist_top_tracks(artist_uri)
     tracks_data = []
     for track in results['tracks']:
@@ -61,11 +67,6 @@ def fetch_artist_top_tracks(sp, artist_uri):
     return tracks_data
 
 def fetch_and_save_spotify_data():
-    client_id = '5b2023b50cd44ccca291f436252f1381'
-    client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
-    credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
-    sp = spotipy.Spotify(client_credentials_manager=credentials)
-
     artist_uris = {
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
         'Bad Bunny': 'spotify:artist:4q3ewBCX7sLwd24euuV69X',
@@ -74,16 +75,14 @@ def fetch_and_save_spotify_data():
         'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ'
     }
 
-    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
-
-    # Database connection setup
+    database_url = os.getenv("DATABASE_URL")
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
 
     try:
         for artist_name, artist_uri in artist_uris.items():
-            tracks_data = fetch_artist_top_tracks(sp, artist_uri)
+            tracks_data = fetch_artist_top_tracks(artist_uri)
             for data in tracks_data:
                 artist = session.query(Artist).filter_by(id=data['artist_id']).first()
                 if not artist:
@@ -104,6 +103,9 @@ def fetch_and_save_spotify_data():
         session.rollback()
     finally:
         session.close()
+
+# Remaining functions remain unchanged
+
 
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
