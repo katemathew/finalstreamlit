@@ -150,9 +150,6 @@ def load_spotify_tracks_db():
     finally:
         session.close()
 
-    finally:
-        session.close()
-
     return tracks, albums, artists
 
 
