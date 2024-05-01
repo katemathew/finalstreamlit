@@ -357,7 +357,7 @@ def main():
 
     # Artist selection dropdown
     artist_list = tracks['Artist'].unique()
-    selected_artist = st.selectbox('Select an Artist', artist_list)
+    selected_artist = st.selectbox('**Select an Artist**', artist_list)
 
     # Filter data by selected artist
     filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
