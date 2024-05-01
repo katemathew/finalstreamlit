@@ -263,7 +263,7 @@ def main():
      # Display trends
     if not combined_data.empty:
         st.header('Trends Analysis')
-        display_trends(combined_data)
+        display_trends(overlaps)
 
     
     # overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
