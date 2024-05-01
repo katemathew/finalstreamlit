@@ -239,19 +239,44 @@ def analyze_overlaps(df1, df2, df3, key='Artist'):
     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return final_combined_data
 
+# def plot_data(df):
+#     if df.empty:
+#         st.write("No data available to plot.")
+#         return
+
+#     # Adding a slider to control the number of bins in the histogram
+#     bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
+    
+#     fig, ax = plt.subplots()
+#     df['popularity'].hist(ax=ax, bins=bins)
+#     ax.set_xlabel('Popularity')
+#     ax.set_ylabel('Frequency')
+#     st.pyplot(fig)
+
 def plot_data(df):
     if df.empty:
         st.write("No data available to plot.")
         return
 
-    # Adding a slider to control the number of bins in the histogram
+    # Histogram for Popularity
     bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
-    
     fig, ax = plt.subplots()
     df['popularity'].hist(ax=ax, bins=bins)
     ax.set_xlabel('Popularity')
     ax.set_ylabel('Frequency')
     st.pyplot(fig)
+
+    # Line plot for album release date trends
+    if 'release_date' in df.columns:
+        df['release_date'] = pd.to_datetime(df['release_date'])
+        release_trends = df.groupby(df['release_date'].dt.year)['album_id'].count()
+        fig, ax = plt.subplots()
+        release_trends.plot(kind='line', ax=ax)
+        ax.set_title('Album Release Trends')
+        ax.set_xlabel('Year')
+        ax.set_ylabel('Number of Albums Released')
+        st.pyplot(fig)
+
 
     
 def main():
@@ -264,15 +289,27 @@ def main():
     st.header('Spotify Filtered Data')
     st.write(spotify_data.head())
     st.header('Spotify Tracks Data')
-    st.write(tracks.head())
+    st.write(tracks.head()) 
 
-    st.header('List of Artists from Spotify Tracks')
-    unique_artists = tracks['Artist'].unique()  # Get unique artist names
-    st.write(unique_artists) 
 
-    combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
-    st.header('Combined Artist Table with Albums')
+    # Artist selection dropdown
+    artist_list = tracks['Artist'].unique()
+    selected_artist = st.selectbox('Select an Artist', artist_list)
+
+    # Filter data by selected artist
+    filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
+    filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
+    filtered_tracks = tracks[tracks['Artist'] == selected_artist]
+
+    # Display Combined Data for selected artist
+    st.header(f'Combined Data for {selected_artist}')
+    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
     st.write(combined_data)
+
+    
+    # combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
+    # st.header('Combined Artist Table with Albums')
+    # st.write(combined_data)
 
      # Display trends
     if not combined_data.empty:
