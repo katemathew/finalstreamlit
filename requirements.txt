@@ -6,3 +6,4 @@ python-dotenv
 spotipy
 psycopg2-binary
 seaborn
+altair
