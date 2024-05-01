@@ -373,19 +373,19 @@ def main():
      # Findings Section
     with st.expander("**Findings**"):
         st.write("""
-        My analysis reveals several nuanced trends and artist-specific tendencies that highlight the complex interplay between various musical attributes and song popularity. Here are some key insights:
+        My analysis reveals certain trends and artist-specific tendencies that highlight the intersection between various musical attributes and song popularity. It is important to note the subjectivity of music, and while there were general and artist based trends, many aspects of songs and popularity cannot be measured easily, as there are outside factors that can influence these decisions. Here are some key insights:
 
         **General Trends:**
-        - **Duration vs. Popularity:** Observed a general trend where shorter song durations correlate with higher popularity, as indicated by a negative correlation of -0.61. This trend aligns with current listener preferences for shorter tracks, likely influenced by diminishing attention spans. However, notable exceptions such as Taylor Swift’s "All Too Well (10 Minute Version)" demonstrate that long tracks can also achieve significant popularity.
+        - **Duration vs. Popularity:** Observed a general trend where shorter song durations correlate with higher popularity, as indicated by a negative correlation of -0.61. This trend aligns with current listener preferences for shorter tracks, likely influenced by shorter attention spans. However, notable exceptions such as Taylor Swift’s "All Too Well (10 Minute Version)" demonstrate that long tracks can also achieve significant popularity.
 
         **Energy and Acoustics:**
         - Tracks with lower acoustic features typically exhibit higher energy levels. This suggests a preference for more electronically produced or upbeat music, which can vary significantly across different musical genres.
 
         **Artist-Specific Observations:**
         - **Taylor Swift:** For Taylor Swift, the link between track duration and popularity is particularly pronounced, providing insights into her song production strategy and its impact on commercial success.
-        - **Drake:** Drake's tracks show weaker overall correlations, highlighting the diversity in his musical style. Notably, a negative correlation between energy and danceability in his music suggests that higher energy does not always enhance danceability, possibly due to the lyrical intensity or complex rhythms that characterize his songs.
+        - **Drake:** Drake's tracks show weaker overall correlations, highlighting the diversity in his musical style. Notably, a negative correlation between energy and danceability in his music suggests that higher energy does not always enhance danceability, possibly due to the genre of rap, lyrical focus, or complex rhythms that characterize his songs.
 
-        These insights are instrumental for artists, producers, and music platforms in making informed decisions about song production and curation. I encourage further exploration of my correlation heatmap to uncover additional insights and understand how various musical elements interact across different artists and genres. Dive into the analysis and see what unique correlations resonate with or challenge your understanding of music!
+        These insights can be instrumental for artists, producers, and music platforms in making informed decisions about song production and curation. I encourage you to explore the correlation heatmap to uncover additional insights and understand how various musical elements interact across different artists and genres. Dive into the analysis and see what unique correlations resonate with or challenge your understanding of music!
     """) 
     # Gotchas
     with st.expander("**Awh Darns! Gotcha**"):
