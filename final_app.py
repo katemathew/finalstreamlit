@@ -328,9 +328,12 @@ def additional_visualizations(df):
 
     # Time Series Plot for Popularity Over Time
     if 'release_date' in df.columns and 'popularity' in df.columns:
-        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+        # Explicitly specify the date format to ensure correct parsing
+        df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
         time_data = df.dropna(subset=['release_date', 'popularity'])
         time_data = time_data.sort_values('release_date')
+
+        # Create the plot
         fig, ax = plt.subplots()
         sns.lineplot(x='release_date', y='popularity', data=time_data, ax=ax)
         ax.set_title('Popularity Over Time')
