@@ -291,17 +291,14 @@ def plot_alternative_visualizations(df):
 
     # Bar Chart for Album Releases by Year
     if 'release_date' in df.columns:
+        # Debugging: Output original data sample
+        st.write("Original date samples:", df['release_date'].head())
+
         # Explicitly specify the date format for parsing
         df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
-        df['release_year'] = df['release_date'].dt.year
-        album_counts = df.groupby('release_year').size()
 
-        fig, ax = plt.subplots()
-        album_counts.plot(kind='bar', ax=ax)
-        ax.set_title('Number of Albums Released per Year')
-        ax.set_xlabel('Year')
-        ax.set_ylabel('Number of Albums')
-        st.pyplot(fig)
+        # Debugging: Check if dates are parsed correctly
+        st.write("Parsed dates:", df['release_date'].
 
     # Box Plot for Track Popularity
     if 'popularity' in df.columns:
