@@ -306,6 +306,9 @@ def main():
     combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
     st.write(combined_data)
 
+    st.header('Song Popularity and Album Release Analysis')
+    plot_data(filtered_tracks)
+
     
     # combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
     # st.header('Combined Artist Table with Albums')
@@ -324,8 +327,8 @@ def main():
     # st.write(combined_data)
 
     
-    st.header('Song Popularity Analysis')
-    plot_data(tracks)
+    # st.header('Song Popularity Analysis')
+    # plot_data(tracks)
 
 if __name__ == "__main__":
     main()
