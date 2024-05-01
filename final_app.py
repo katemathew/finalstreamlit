@@ -11,14 +11,14 @@ import seaborn as sns
 import altair as alt
 from spotipy.oauth2 import SpotifyClientCredentials
 
-# # Load environment variables from .env file
-# load_dotenv()
+# Load environment variables from .env file
+load_dotenv()
 
-# # Set up logging
-# logging.basicConfig(level=logging.INFO)
+# Set up logging
+logging.basicConfig(level=logging.INFO)
 
-# # Database schema setup
-# Base = declarative_base()
+# Database schema setup
+Base = declarative_base()
 
 #Trouble Setting Up, Keep Code For Further Security/Optimization
 
