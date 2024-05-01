@@ -174,7 +174,18 @@ def load_spotify_tracks_db():
 #     common = pd.merge(df1, df2, on=key, how='inner')
 #     return common
 
-combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
+# combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
+
+def analyze_overlaps(df1, df2, df3, key='Artist'):
+    """
+    This function will merge three dataframes on the column specified by 'key'.
+    It first merges df1 and df2, then the result with df3, ensuring all three datasets are compared.
+    """
+    # Merge the first two datasets on the specified key
+    combined_data = pd.merge(df1, df2, on=key, how='inner', suffixes=('_setlist', '_spotify_filtered'))
+    # Merge the combined data with the third dataset
+    final_combined_data = pd.merge(combined_data, df3, on=key, how='inner', suffixes=('', '_spotify_tracks'))
+    return final_combined_data
 
 # def plot_data(df):
 #     if df.empty:
@@ -210,11 +221,19 @@ def main():
     st.write(spotify_data.head())
     st.header('Spotify Tracks Data')
     st.write(tracks.head())
-    overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
+
+    overlaps = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
+    st.header('Combined Artist Table with Albums')
+    st.write(overlaps)
+
+    
+    # overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
     # st.header('Overlaps in Artists')
     # st.write(overlaps)
-    st.header('Combined Artist Table with Albums')
-    st.write(combined_data)
+    # st.header('Combined Artist Table with Albums')
+    # st.write(combined_data)
+
+    
     st.header('Song Popularity Analysis')
     plot_data(tracks)
 
