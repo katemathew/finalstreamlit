@@ -3,14 +3,21 @@ Welcome To My Music Streamlit App! Here are a few tips to help navigate my repos
 Main Python File For Streamlit App: final_app.py
 
 Individual Python Scrapers:
+
 Kaggle (kaggledatafilter.py): Filters and sorts through downloadable Spotify Kaggle dataset
+
 Spotify API (spotifyscraper.py): Looks for specified artists, songs, and associated features through Spotify API
+
 Setlist FM Setlist Scraper [Original] (setlistscraper.py): Goes through an artist’s specific setlist to scrape data
+
 Setlist FM Artist Page Scraper (setlistscraperall.py): Goes to Setlist FM Artist page and scrapes data from the most recent setlists/performances
 
 CSV:
+
 Filtered Spotify Data (filtered_spotify_data.csv): Kaggle Filtered Data With Specific Parameters
+
 Setlist Data (setlist_data.csv): Setlist FM Setlist [Original] Data From A Specific Artist's Setlist
+
 Setlist Data Detailed (setlist_data_detailed.csv): Setlist FM Artist Page Data From the most recent setlists/performances
 
 ENV:
