@@ -207,6 +207,10 @@ def main():
     st.header('Spotify Tracks Data')
     st.write(tracks.head())
 
+    st.header('List of Artists from Spotify Tracks')
+    unique_artists = tracks['Artist'].unique()  # Get unique artist names
+    st.write(unique_artists) 
+
     overlaps = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
     st.header('Combined Artist Table with Albums')
     st.write(overlaps)
