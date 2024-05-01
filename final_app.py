@@ -350,6 +350,12 @@ def main():
     st.header('Song Popularity')
     plot_data(filtered_tracks)
 
+     # Explanation about Spotify Popularity Index
+    st.header(f'Visualizations for {selected_artist}')
+    st.markdown("""
+    **The Spotify Popularity Index** is a 0-to-100 score that ranks how popular an artist is relative to other artists on Spotify. As your numbers grow, you'll get placed in more editorial playlists and increase your reach on algorithmic playlists and recommendations.
+    """)
+
     st.header(f'Visualizations for {selected_artist}')
     plot_alternative_visualizations(filtered_tracks)
     
@@ -368,7 +374,6 @@ def main():
     # st.write(overlaps)
     # st.header('Combined Artist Table with Albums')
     # st.write(combined_data)
-
     
     # st.header('Song Popularity Analysis')
     # plot_data(tracks)
