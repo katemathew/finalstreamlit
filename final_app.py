@@ -333,15 +333,15 @@ def main():
     tracks = load_spotify_tracks_db()
 
     # Setlist Data Expander
-    with st.expander("Setlist Data - This data was retrieved from setlist.fm, a top site for discovering features for live events."):
+    with st.expander("**Setlist Data** - This data was retrieved from setlist.fm, a top site for discovering features for live events. Click To Explore A Few Lines."):
         st.write(setlist_data.head())
 
     # Spotify Filtered Data Expander
-    with st.expander("Spotify Filtered Data - This data was retrieved from a Kaggle dataset, compiling Spotify data from the 2000's to 2020."):
+    with st.expander("**Spotify Filtered Data** - This data was retrieved from a Kaggle dataset, compiling Spotify data from the 2000's to 2020. Click To Explore A Few Lines."):
         st.write(spotify_data.head())
 
     # Spotify Tracks Data Expander
-    with st.expander("Spotify Tracks Data - This data was retrieved from the Spotify API, providing current metrics for songs and artists."):
+    with st.expander("**Spotify Tracks Data** - This data was retrieved from the Spotify API, providing current metrics for songs and artists. Click To Explore A Few Lines."):
         st.write(tracks.head())
 
 
