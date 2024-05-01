@@ -352,7 +352,7 @@ def main():
 
      # Findings
     with st.expander("**Findings**"):
-        st.write("""Findings: There are certain trends, such as tendencies for a certain energy level, loudness, etc, however, a lot of these are very song dependent, and their popularity can be based on many outside factors. Duration was a very interesting factor to look at, which mirrors current trends in short attention spans. As duration increases, it is likely for popularity to decrease. (This is not always true though, for example, Taylor Swift’s All Too Well (10 Minute Version, topped the charts.)  Thanks for exploring!""") 
+        st.write("""There are certain trends or Artist tendencies for a certain energy level, loudness, etc, however, a lot of these are subjective and very song dependent; their popularity can be based on many outside factors. Duration was a very interesting variable to look at, which mirrors current trends in short attention spans. As duration increases, it is likely for popularity to decrease (Shown By Correlation Heat Map). This is not always true, for example, Taylor Swift’s All Too Well (10 Minute Version, topped the charts.""") 
 
     # Gotchas
     with st.expander("**Awh Darns! Gotcha**"):
