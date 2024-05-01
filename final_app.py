@@ -289,16 +289,16 @@ def plot_alternative_visualizations(df):
         st.write("No data available to plot.")
         return
 
-    # Bar Chart for Album Releases by Year
-    if 'release_date' in df.columns:
-        # Debugging: Output original data sample
-        st.write("Original date samples:", df['release_date'].head())
+    # # Bar Chart for Album Releases by Year
+    # if 'release_date' in df.columns:
+    #     # Debugging: Output original data sample
+    #     st.write("Original date samples:", df['release_date'].head())
 
-        # Explicitly specify the date format for parsing
-        df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
+    #     # Explicitly specify the date format for parsing
+    #     df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
 
-        # Debugging: Check if dates are parsed correctly
-        st.write("Parsed dates:", df['release_date'].
+    #     # Debugging: Check if dates are parsed correctly
+    #     st.write("Parsed dates:", df['release_date'].
 
     # Box Plot for Track Popularity
     if 'popularity' in df.columns:
