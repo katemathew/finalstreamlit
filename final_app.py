@@ -192,6 +192,7 @@ def load_spotify_tracks_db():
             .statement, 
             engine
         )
+        tracks['Artist'] = tracks['Artist'].apply(clean_artist_name)
     finally:
         session.close()
 
