@@ -327,6 +327,42 @@ def interactive_time_series(df):
         
 def main():
     st.title('Music Data Analysis App')
+    st.title('Music Data Analysis App')
+    st.subheader('Kate Mathew')
+
+    # Instructions as a dropdown
+    with st.expander("Welcome to my Music Data Analysis App!"):
+        st.write("""
+        There is a lot you can do here to explore trends with artists and songs. First, if you want to explore what each data table/data collection source looks like individually, there are dropdowns for each individual scraper to see how they collect information. Now on to the fun stuff! 
+        
+        To get started, select an artist from the dropdown. These artists were chosen as a combination from recently scraped setlist data and the most popular artists on Spotify currently. Once you have your artist selected, there are many things you can explore:
+        
+        1. **Combined Dataset for The Artist** - This shows how the three datasets merge together, which will be used for further analysis and visualization.
+        2. **Song Popularity** - Shows frequency of tracks for an Artist versus their Spotify Popularity Score. Feel free to use the slider to change the bin size and explore the data more broadly!
+        3. **Visualization 1** - Popularity Distribution Box Plot. Shows The Average Range For Popularity Scores For An Artist, As Well As Outliers.
+        4. **Visualization 2** - Popularity vs Track Duration Scatter Plot. Looks At Artist Data and Shows If There Are Any Trends Within Track Duration and Popularity.
+        5. **Visualization 3** - Popularity over Time Time Series Plot. Looks At Trends Between Popularity and Release Date.
+        6. **Visualization 4** - Correlation Heat Map. The off-diagonal value of -0.61 between popularity and duration_ms suggests a moderate negative correlation. This implies that as the duration of a track increases, its popularity tends to decrease, or vice versa.
+        7. **Visualization 5** - Pie Chart Showing Recent Album Contribution and Popularity.
+        8. **Visualization 6** - Interactive Scatter Plot. Explore on your own! Choose two variables and see how they correlate.
+        9. **Visualization 7** - Interactive Time Series Analysis. Feel free to explore time with the slider and see how popularity and release date correlate!
+        10. **Trend Analysis** - Finally, we have an average trend analysis for the curious folks! 
+        
+        Thanks for exploring!
+        """)
+
+    # Gotchas as a dropdown
+    with st.expander("Awh Darns! Gotcha"):
+        st.write("""
+        - **Environmental Variables & Security**: Even after establishing environmental variables to protect sensitive information and testing locally, when brought to Github and Streamlit Share, the variables were not found in the app.
+        - **Multipage Scraper**: There was trouble scraping data that had pagination incorporated as well as undefined html variables, especially when it was not consistent throughout the website.
+        - **Heroku Database & CSV’s**: Limited capacity.
+        - **Variable Consistency in Combined Dataset**: As this data is compiled by multiple sources, there are parts of the combined dataset that will duplicate or not match up, as they refer to different variables and correlations depending on where they are scraped from.
+        """)
+
+
+
+    
     setlist_data = load_setlist_data()
     spotify_data = load_filtered_spotify_data()
     tracks = load_spotify_tracks_db()
