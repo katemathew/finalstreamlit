@@ -349,8 +349,8 @@ def additional_visualizations(df):
         st.pyplot(fig)
 
     # Pie Chart for Album Contribution
-    if 'album_name' in df.columns and 'popularity' in df.columns:
-        album_contribution = df.groupby('album_name')['popularity'].sum()
+    if 'Album' in df.columns and 'popularity' in df.columns:
+        album_contribution = df.groupby('Album')['popularity'].sum()
         fig, ax = plt.subplots()
         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
         ax.set_title('Album Contribution to Overall Popularity')
@@ -393,10 +393,6 @@ def main():
     **The Spotify Popularity Index** is a 0-to-100 score that ranks how popular an artist is relative to other artists on Spotify. As your numbers grow, you'll get placed in more editorial playlists and increase your reach on algorithmic playlists and recommendations.
     """)
 
-    st.header(f'Visualizations for {selected_artist}')
-    plot_alternative_visualizations(filtered_tracks)
-
-    st.header(f'Visualizations for {selected_artist}')
     plot_alternative_visualizations(filtered_tracks)
 
     # New Section for Advanced Visualizations
