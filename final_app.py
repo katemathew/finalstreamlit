@@ -329,8 +329,8 @@ def main():
     st.title('Music Data Analysis App')
     st.subheader('Kate Mathew')
 
-    # Instructions as a dropdown
-    with st.expander("Welcome to my Music Data Analysis App!"):
+    # Instructions
+    with st.expander("**Welcome to my Music Data Analysis App!**"):
         st.write("""
         There is a lot you can do here to explore trends with artists and songs. First, if you want to explore what each data table/data collection source looks like individually, there are dropdowns for each individual scraper to see how they collect information. Now on to the fun stuff! 
         
@@ -350,16 +350,18 @@ def main():
         Thanks for exploring!
         """)
 
-    # Gotchas as a dropdown
-    with st.expander("Awh Darns! Gotcha"):
+     # Findings
+    with st.expander("**Findings**"):
+        st.write("""Findings: There are certain trends, such as tendencies for a certain energy level, loudness, etc, however, a lot of these are very song dependent, and their popularity can be based on many outside factors. Duration was a very interesting factor to look at, which mirrors current trends in short attention spans. As duration increases, it is likely for popularity to decrease. (This is not always true though, for example, Taylor Swift’s All Too Well (10 Minute Version, topped the charts.)  Thanks for exploring!""") 
+
+    # Gotchas
+    with st.expander("**Awh Darns! Gotcha**"):
         st.write("""
         - **Environmental Variables & Security**: Even after establishing environmental variables to protect sensitive information and testing locally, when brought to Github and Streamlit Share, the variables were not found in the app.
         - **Multipage Scraper**: There was trouble scraping data that had pagination incorporated as well as undefined html variables, especially when it was not consistent throughout the website.
         - **Heroku Database & CSV’s**: Limited capacity.
         - **Variable Consistency in Combined Dataset**: As this data is compiled by multiple sources, there are parts of the combined dataset that will duplicate or not match up, as they refer to different variables and correlations depending on where they are scraped from.
         """)
-
-
 
     
     setlist_data = load_setlist_data()
