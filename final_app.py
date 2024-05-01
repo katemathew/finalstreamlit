@@ -7,6 +7,7 @@ from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from dotenv import load_dotenv
 import logging
 import spotipy
+import seaborn as sns
 from spotipy.oauth2 import SpotifyClientCredentials
 
 # Load environment variables from .env file
@@ -319,6 +320,42 @@ def plot_alternative_visualizations(df):
         ax.set_xlabel('Duration (seconds)')
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
+
+def additional_visualizations(df):
+    if df.empty:
+        st.write("No data available for plot.")
+        return
+
+    # Time Series Plot for Popularity Over Time
+    if 'release_date' in df.columns and 'popularity' in df.columns:
+        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+        time_data = df.dropna(subset=['release_date', 'popularity'])
+        time_data = time_data.sort_values('release_date')
+        fig, ax = plt.subplots()
+        sns.lineplot(x='release_date', y='popularity', data=time_data, ax=ax)
+        ax.set_title('Popularity Over Time')
+        ax.set_xlabel('Release Date')
+        ax.set_ylabel('Popularity')
+        st.pyplot(fig)
+
+    # Correlation Heatmap
+    if set(['popularity', 'duration_ms']).issubset(df.columns):
+        # You might need to scale or adjust these columns
+        correlation_data = df[['popularity', 'duration_ms']]
+        correlation = correlation_data.corr()
+        fig, ax = plt.subplots()
+        sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax)
+        ax.set_title('Correlation Heatmap')
+        st.pyplot(fig)
+
+    # Pie Chart for Album Contribution
+    if 'album_name' in df.columns and 'popularity' in df.columns:
+        album_contribution = df.groupby('album_name')['popularity'].sum()
+        fig, ax = plt.subplots()
+        album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
+        ax.set_title('Album Contribution to Overall Popularity')
+        ax.set_ylabel('')
+        st.pyplot(fig)
         
 def main():
     st.title('Music Data Analysis App')
@@ -358,6 +395,13 @@ def main():
 
     st.header(f'Visualizations for {selected_artist}')
     plot_alternative_visualizations(filtered_tracks)
+
+    st.header(f'Visualizations for {selected_artist}')
+    plot_alternative_visualizations(filtered_tracks)
+
+    # New Section for Advanced Visualizations
+    st.header('Advanced Visualizations of Combined Data')
+    additional_visualizations(combined_data)
     
     # combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
     # st.header('Combined Artist Table with Albums')
