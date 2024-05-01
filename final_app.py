@@ -331,12 +331,28 @@ def main():
     setlist_data = load_setlist_data()
     spotify_data = load_filtered_spotify_data()
     tracks = load_spotify_tracks_db()
-    st.header('Setlist Data')
-    st.write(setlist_data.head())
-    st.header('Spotify Filtered Data')
-    st.write(spotify_data.head())
-    st.header('Spotify Tracks Data')
-    st.write(tracks.head()) 
+
+    # Setlist Data Expander
+    with st.expander("Setlist Data - This data was retrieved from setlist.fm, a top site for discovering features for live events."):
+        st.write(setlist_data.head())
+
+    # Spotify Filtered Data Expander
+    with st.expander("Spotify Filtered Data - This data was retrieved from a Kaggle dataset, compiling Spotify data from the 2000's to 2020."):
+        st.write(spotify_data.head())
+
+    # Spotify Tracks Data Expander
+    with st.expander("Spotify Tracks Data - This data was retrieved from the Spotify API, providing current metrics for songs and artists."):
+        st.write(tracks.head())
+
+
+
+    
+    # st.header('Setlist Data')
+    # st.write(setlist_data.head())
+    # st.header('Spotify Filtered Data')
+    # st.write(spotify_data.head())
+    # st.header('Spotify Tracks Data')
+    # st.write(tracks.head()) 
 
 
     # Artist selection dropdown
