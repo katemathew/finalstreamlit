@@ -291,7 +291,8 @@ def plot_alternative_visualizations(df):
 
     # Bar Chart for Album Releases by Year
     if 'release_date' in df.columns:
-        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+        # Explicitly specify the date format for parsing
+        df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
         df['release_year'] = df['release_date'].dt.year
         album_counts = df.groupby('release_year').size()
 
@@ -346,7 +347,7 @@ def main():
     combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
     st.write(combined_data)
 
-    st.header('Song Popularity and Album Release Analysis')
+    st.header('Song Popularity')
     plot_data(filtered_tracks)
 
     st.header(f'Visualizations for {selected_artist}')
