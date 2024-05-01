@@ -262,25 +262,25 @@ def additional_visualizations(df):
         st.pyplot(fig)
 
 def correlation_heatmap(df):
-    # Check if the desired columns exist in the DataFrame
-    cols_to_check = ['popularity_y', 'duration_ms_y', 'energy', 'danceability', 'acousticness', 'valence']
-    available_cols = [col for col in cols_to_check if col in df.columns]
+    if df.empty:
+        st.error("DataFrame is empty. No data to display.")
+        return
     
-    if not available_cols:
-        st.write("None of the specified columns are available in the DataFrame.")
+    cols_to_check = ['popularity_y', 'duration_ms_y', 'energy', 'danceability', 'acousticness', 'valence']
+    cols_available = [col for col in cols_to_check if col in df.columns]
+    
+    if not cols_available:
+        st.error("None of the specified columns are available in the DataFrame.")
         return
 
-    # Filter the DataFrame to include only the available columns
-    correlation_data = df[available_cols]
-
-    # Calculate the correlation matrix
+    correlation_data = df[cols_available]
     correlation = correlation_data.corr()
 
-    # Create the heatmap
-    fig, ax = plt.subplots(figsize=(10, 8))  # Sizing the figure to make sure it's big enough to read
+    fig, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax, fmt=".2f")
     ax.set_title('Correlation Heatmap')
-    st.pyplot(fig)
+    st.pyplot(fig)  # Ensure this is being called correctly
+
 
 def interactive_scatter_plot(df):
     if df.empty:
@@ -418,8 +418,12 @@ def main():
 
     plot_alternative_visualizations(filtered_tracks)
 
-    df = pd.DataFrame()
-    correlation_heatmap(df)
+    if not combined_data.empty and {'popularity_y', 'duration_ms_y'}.issubset(combined_data.columns):
+        st.header('Correlation Heatmap of Combined Data')
+        correlation_heatmap(combined_data)
+    else:
+        st.error('Data not suitable for correlation heatmap.')
+    
 
     # Advanced Visualizations
     st.header('Advanced Visualizations of Combined Data')
