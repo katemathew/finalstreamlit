@@ -25,3 +25,5 @@ Additional Python files as tabs in Streamlit
 Dataset Description (dataset_description.py): Gives an overview of the three datasets incorporated into Streamlit app
 
 Web App Questions (webapp_questions.py): Describes project as asked for in Milestone 3 Requirements.
+
+Milestone 2 Text File (milestone2_text_file.py): I wanted to include the Milestone 2 text file as well that was missing from the original zip submission, not sure what happened!
