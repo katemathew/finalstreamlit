@@ -256,14 +256,14 @@ def main():
     unique_artists = tracks['Artist'].unique()  # Get unique artist names
     st.write(unique_artists) 
 
-    overlaps = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
+    combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
     st.header('Combined Artist Table with Albums')
-    st.write(overlaps)
+    st.write(combined_data)
 
      # Display trends
     if not combined_data.empty:
         st.header('Trends Analysis')
-        display_trends(overlaps)
+        display_trends(combined_data)
 
     
     # overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
