@@ -259,25 +259,30 @@ def plot_data(df):
         return
 
     # Histogram for Popularity
-    bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
-    fig, ax = plt.subplots()
-    df['popularity'].hist(ax=ax, bins=bins)
-    ax.set_xlabel('Popularity')
-    ax.set_ylabel('Frequency')
-    st.pyplot(fig)
-
-    # Line plot for album release date trends
-    if 'release_date' in df.columns:
-        df['release_date'] = pd.to_datetime(df['release_date'])
-        release_trends = df.groupby(df['release_date'].dt.year)['album_id'].count()
+    if 'popularity' in df.columns:
+        bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
         fig, ax = plt.subplots()
-        release_trends.plot(kind='line', ax=ax)
-        ax.set_title('Album Release Trends')
-        ax.set_xlabel('Year')
-        ax.set_ylabel('Number of Albums Released')
+        df['popularity'].hist(ax=ax, bins=bins)
+        ax.set_xlabel('Popularity')
+        ax.set_ylabel('Frequency')
         st.pyplot(fig)
 
+    # Line plot for album release date trends
+    if 'release_date' in df.columns and not df['release_date'].isnull().all():
+        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+        df = df.dropna(subset=['release_date'])  # Ensure no null values
+        df['release_year'] = df['release_date'].dt.year
+        release_trends = df.groupby('release_year').size()
 
+        if not release_trends.empty:
+            fig, ax = plt.subplots()
+            release_trends.plot(kind='line', ax=ax)
+            ax.set_title('Album Release Trends')
+            ax.set_xlabel('Year')
+            ax.set_ylabel('Number of Albums Released')
+            st.pyplot(fig)
+        else:
+            st.write("No sufficient data for release trends.")
     
 def main():
     st.title('Music Data Analysis App')
