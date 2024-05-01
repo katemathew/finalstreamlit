@@ -177,7 +177,6 @@ def load_spotify_tracks_db():
 # combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
 
 def analyze_overlaps(df1, df2, df3, key='Artist'):
-    """Merge three dataframes on a specified key and return the combined dataframe."""
     combined_data = pd.merge(df1, df2, on=key, how='inner')
     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return final_combined_data
