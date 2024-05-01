@@ -70,6 +70,19 @@ def clean_artist_name(name):
     """Clean artist names by removing unwanted characters and making them lowercase."""
     return name.replace('[', '').replace(']', '').replace("'", "").strip().lower()
 
+def display_trends(df):
+    if df.empty:
+        st.write("No data available for analysis.")
+        return
+
+    average_danceability = df['danceability'].mean()
+    average_energy = df['energy'].mean()
+
+    # Display the averages
+    st.write(f"**Average Danceability:** {average_danceability:.2f}")
+    st.write(f"**Average Energy:** {average_energy:.2f}")
+
+
 def fetch_and_save_spotify_data():
     artist_uris = {
         'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM',
@@ -212,39 +225,16 @@ def analyze_overlaps(df1, df2, df3, key='Artist'):
     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return final_combined_data
 
-# def plot_data(df):
-#     if df.empty:
-#         st.write("No data available to plot.")
-#         return
-
-#     # Adding a slider to control the number of bins in the histogram
-#     bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
-    
-#     fig, ax = plt.subplots()
-#     df['popularity'].hist(ax=ax, bins=bins)
-#     ax.set_xlabel('Popularity')
-#     ax.set_ylabel('Frequency')
-#     st.pyplot(fig)
-
 def plot_data(df):
     if df.empty:
         st.write("No data available to plot.")
         return
 
-    # Interactive histogram
+    # Adding a slider to control the number of bins in the histogram
+    bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
+    
     fig, ax = plt.subplots()
-    counts, bins, patches = ax.hist(df['popularity'], bins=20, color='blue', edgecolor='black')
-
-    # Hover text: showing songs in each bin
-    bin_songs = pd.cut(df['popularity'], bins=bins, labels=[f'Bin {i+1}' for i in range(len(bins)-1)])
-    songs_in_bins = df.groupby(bin_songs)['name'].apply(list).reindex(bin_songs.cat.categories)
-
-    # Annotate each bar in histogram with list of songs
-    for rect, songs in zip(patches, songs_in_bins):
-        height = rect.get_height()
-        ax.annotate(f'{songs}', (rect.get_x() + rect.get_width() / 2, height),
-                    ha='center', va='bottom')
-
+    df['popularity'].hist(ax=ax, bins=bins)
     ax.set_xlabel('Popularity')
     ax.set_ylabel('Frequency')
     st.pyplot(fig)
@@ -269,6 +259,11 @@ def main():
     overlaps = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
     st.header('Combined Artist Table with Albums')
     st.write(overlaps)
+
+     # Display trends
+    if not combined_data.empty:
+        st.header('Trends Analysis')
+        display_trends(combined_data)
 
     
     # overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
