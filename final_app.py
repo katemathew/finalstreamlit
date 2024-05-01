@@ -170,20 +170,35 @@ def load_spotify_tracks_db():
 # def analyze_overlaps(df1, df2, key='Artist'):
 #     return pd.merge(df1, df2, on=key, how='inner')
 
-def analyze_overlaps(df1, df2, key='Artist'):
-    common = pd.merge(df1, df2, on=key, how='inner')
-    return common
+# def analyze_overlaps(df1, df2, key='Artist'):
+#     common = pd.merge(df1, df2, on=key, how='inner')
+#     return common
 
+combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
+
+# def plot_data(df):
+#     if df.empty:
+#         st.write("No data available to plot.")
+#         return
+#     fig, ax = plt.subplots()
+#     df['popularity'].hist(ax=ax)
+#     ax.set_xlabel('Popularity')  # Adding an X-axis label
+#     ax.set_ylabel('Frequency')  # Adding a Y-axis label
+#     st.pyplot(fig)
 def plot_data(df):
     if df.empty:
         st.write("No data available to plot.")
         return
-    fig, ax = plt.subplots()
-    df['popularity'].hist(ax=ax)
-    ax.set_xlabel('Popularity')  # Adding an X-axis label
-    ax.set_ylabel('Frequency')  # Adding a Y-axis label
-    st.pyplot(fig)
 
+    # Adding a slider to control the number of bins in the histogram
+    bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
+    
+    fig, ax = plt.subplots()
+    df['popularity'].hist(ax=ax, bins=bins)
+    ax.set_xlabel('Popularity')
+    ax.set_ylabel('Frequency')
+    st.pyplot(fig)
+    
 def main():
     st.title('Music Data Analysis App')
     setlist_data = load_setlist_data()
@@ -196,8 +211,10 @@ def main():
     st.header('Spotify Tracks Data')
     st.write(tracks.head())
     overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
-    st.header('Overlaps in Artists')
-    st.write(overlaps)
+    # st.header('Overlaps in Artists')
+    # st.write(overlaps)
+    st.header('Combined Artist Table with Albums')
+    st.write(combined_data)
     st.header('Song Popularity Analysis')
     plot_data(tracks)
 
