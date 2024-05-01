@@ -310,10 +310,13 @@ def plot_alternative_visualizations(df):
 
     # Scatter Plot for Popularity vs. Track Duration
     if 'popularity' in df.columns and 'duration_ms' in df.columns:
+        # Convert duration from milliseconds to seconds
+        df['duration_sec'] = df['duration_ms'] / 1000
+
         fig, ax = plt.subplots()
-        df.plot(kind='scatter', x='duration_ms', y='popularity', ax=ax)
+        df.plot(kind='scatter', x='duration_sec', y='popularity', ax=ax)
         ax.set_title('Popularity vs. Track Duration')
-        ax.set_xlabel('Duration (ms)')
+        ax.set_xlabel('Duration (seconds)')
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
         
