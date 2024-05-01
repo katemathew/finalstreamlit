@@ -327,24 +327,24 @@ def additional_visualizations(df):
         return
 
     # Time Series Plot for Popularity Over Time
-    if 'release_date' in df.columns and 'popularity' in df.columns:
+    if 'release_date' in df.columns and 'popularity_y' in df.columns:
         # Explicitly specify the date format to ensure correct parsing
         df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
-        time_data = df.dropna(subset=['release_date', 'popularity'])
+        time_data = df.dropna(subset=['release_date', 'popularity_y'])
         time_data = time_data.sort_values('release_date')
 
         # Create the plot
         fig, ax = plt.subplots()
-        sns.lineplot(x='release_date', y='popularity', data=time_data, ax=ax)
+        sns.lineplot(x='release_date', y='popularity_y', data=time_data, ax=ax)
         ax.set_title('Popularity Over Time')
         ax.set_xlabel('Release Date')
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
     # Correlation Heatmap
-    if set(['popularity', 'duration_ms']).issubset(df.columns):
+    if set(['popularity_y', 'duration_ms_y']).issubset(df.columns):
         # You might need to scale or adjust these columns
-        correlation_data = df[['popularity', 'duration_ms']]
+        correlation_data = df[['popularity_y', 'duration_ms_y']]
         correlation = correlation_data.corr()
         fig, ax = plt.subplots()
         sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax)
@@ -352,8 +352,8 @@ def additional_visualizations(df):
         st.pyplot(fig)
 
     # Pie Chart for Album Contribution
-    if 'Album' in df.columns and 'popularity' in df.columns:
-        album_contribution = df.groupby('Album')['popularity'].sum()
+    if 'Album' in df.columns and 'popularity_y' in df.columns:
+        album_contribution = df.groupby('Album')['popularity_y'].sum()
         fig, ax = plt.subplots()
         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
         ax.set_title('Album Contribution to Overall Popularity')
