@@ -11,14 +11,16 @@ import seaborn as sns
 import altair as alt
 from spotipy.oauth2 import SpotifyClientCredentials
 
-# Load environment variables from .env file
-load_dotenv()
+# # Load environment variables from .env file
+# load_dotenv()
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
+# # Set up logging
+# logging.basicConfig(level=logging.INFO)
 
-# Database schema setup
-Base = declarative_base()
+# # Database schema setup
+# Base = declarative_base()
+
+#Trouble Setting Up, Keep Code For Further Security/Optimization
 
 class Artist(Base):
     __tablename__ = 'artists'
@@ -77,7 +79,7 @@ def display_trends(df):
         st.write("No data available for analysis.")
         return
     
-    # Initialize a dictionary to store the names and average values of the metrics
+    # Initialize dictionary to store names and average values
     metrics = {
         'danceability': 'Danceability',
         'energy': 'Energy',
@@ -89,7 +91,7 @@ def display_trends(df):
         'valence': 'Valence'
     }
 
-    # Loop through the dictionary, calculate the mean, and display results
+    # Loop through dictionary, calculate mean, display results
     for metric, display_name in metrics.items():
         if metric in df.columns:
             average_value = df[metric].mean()
@@ -148,7 +150,6 @@ def fetch_and_save_spotify_data():
 
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
-    # Ensure the column 'Artist' exists. If the column name is different, adjust it here.
     df['Artist'] = df['Artist'].apply(clean_artist_name)
     return df
 
@@ -166,7 +167,6 @@ def load_spotify_tracks_db():
     session = Session()
 
     try:
-        # Using select_from to explicitly start from Track and join to Album and Artist
         tracks = pd.read_sql(
             session.query(
                 Track.id.label('track_id'),
@@ -239,12 +239,12 @@ def additional_visualizations(df):
 
     # Time Series Plot for Popularity Over Time
     if 'release_date' in df.columns and 'popularity_y' in df.columns:
-        # Explicitly specify the date format to ensure correct parsing
+        # Date
         df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
         time_data = df.dropna(subset=['release_date', 'popularity_y'])
         time_data = time_data.sort_values('release_date')
 
-        # Create the plot
+        # Plot
         fig, ax = plt.subplots()
         sns.lineplot(x='release_date', y='popularity_y', data=time_data, ax=ax)
         ax.set_title('Popularity Over Time')
@@ -254,7 +254,6 @@ def additional_visualizations(df):
 
     # Correlation Heatmap
     if set(['popularity_y', 'duration_ms_y']).issubset(df.columns):
-        # You might need to scale or adjust these columns
         correlation_data = df[['popularity_y', 'duration_ms_y']]
         correlation = correlation_data.corr()
         fig, ax = plt.subplots()
@@ -276,13 +275,13 @@ def interactive_scatter_plot(df):
         st.write("No data available for plot.")
         return
 
-    # Allow the user to select which columns to plot
+    # User Selection
     x_options = df.select_dtypes(include=['float64', 'int']).columns.tolist()
     y_options = x_options
     x_axis = st.selectbox("Choose X-axis", options=x_options, index=x_options.index('duration_ms_y'))
     y_axis = st.selectbox("Choose Y-axis", options=y_options, index=y_options.index('popularity_y'))
 
-    # Create the plot
+    # Plot
     chart = alt.Chart(df).mark_circle(size=60).encode(
         x=x_axis,
         y=y_axis,
@@ -296,11 +295,11 @@ def interactive_time_series(df):
         st.write("No data available for plot.")
         return
 
-    # Ensure correct date parsing by specifying the format
+    # Format
     df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
     df = df.sort_values('release_date')
 
-    # Handle cases where dates might be coerced to NaT (not a time) if they don't fit the format
+    # NaT (not a time) 
     if df['release_date'].isnull().any():
         st.write("Some dates could not be parsed.")
         df = df.dropna(subset=['release_date'])
@@ -337,22 +336,12 @@ def main():
         st.write(setlist_data.head())
 
     # Spotify Filtered Data Expander
-    with st.expander("**Spotify Filtered Data** - This data was retrieved from a Kaggle dataset, compiling Spotify data from the 2000's to 2020. Click To Explore A Few Lines."):
+    with st.expander("**Kaggle: Spotify Filtered Data** - This data was retrieved from a Kaggle dataset, compiling Spotify data from the 2000's to 2020. Click To Explore A Few Lines."):
         st.write(spotify_data.head())
 
     # Spotify Tracks Data Expander
     with st.expander("**Spotify Tracks Data** - This data was retrieved from the Spotify API, providing current metrics for songs and artists. Click To Explore A Few Lines."):
         st.write(tracks.head())
-
-
-
-    
-    # st.header('Setlist Data')
-    # st.write(setlist_data.head())
-    # st.header('Spotify Filtered Data')
-    # st.write(spotify_data.head())
-    # st.header('Spotify Tracks Data')
-    # st.write(tracks.head()) 
 
 
     # Artist selection dropdown
@@ -380,7 +369,7 @@ def main():
 
     plot_alternative_visualizations(filtered_tracks)
 
-    # New Section for Advanced Visualizations
+    # Advanced Visualizations
     st.header('Advanced Visualizations of Combined Data')
     additional_visualizations(combined_data)
 
@@ -390,7 +379,7 @@ def main():
     st.header('Interactive Time Series Analysis')
     interactive_time_series(combined_data)
 
-     # Display trends
+     # Trends
     if not combined_data.empty:
         st.header('Trends Analysis')
         display_trends(combined_data)
