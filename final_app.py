@@ -283,7 +283,42 @@ def plot_data(df):
             st.pyplot(fig)
         else:
             st.write("No sufficient data for release trends.")
-    
+
+def plot_alternative_visualizations(df):
+    if df.empty:
+        st.write("No data available to plot.")
+        return
+
+    # Bar Chart for Album Releases by Year
+    if 'release_date' in df.columns:
+        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
+        df['release_year'] = df['release_date'].dt.year
+        album_counts = df.groupby('release_year').size()
+
+        fig, ax = plt.subplots()
+        album_counts.plot(kind='bar', ax=ax)
+        ax.set_title('Number of Albums Released per Year')
+        ax.set_xlabel('Year')
+        ax.set_ylabel('Number of Albums')
+        st.pyplot(fig)
+
+    # Box Plot for Track Popularity
+    if 'popularity' in df.columns:
+        fig, ax = plt.subplots()
+        df['popularity'].plot(kind='box', ax=ax)
+        ax.set_title('Popularity Distribution')
+        ax.set_ylabel('Popularity Score')
+        st.pyplot(fig)
+
+    # Scatter Plot for Popularity vs. Track Duration
+    if 'popularity' in df.columns and 'duration_ms' in df.columns:
+        fig, ax = plt.subplots()
+        df.plot(kind='scatter', x='duration_ms', y='popularity', ax=ax)
+        ax.set_title('Popularity vs. Track Duration')
+        ax.set_xlabel('Duration (ms)')
+        ax.set_ylabel('Popularity')
+        st.pyplot(fig)
+        
 def main():
     st.title('Music Data Analysis App')
     setlist_data = load_setlist_data()
@@ -314,6 +349,8 @@ def main():
     st.header('Song Popularity and Album Release Analysis')
     plot_data(filtered_tracks)
 
+    st.header(f'Visualizations for {selected_artist}')
+    plot_alternative_visualizations(filtered_tracks)
     
     # combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
     # st.header('Combined Artist Table with Albums')
