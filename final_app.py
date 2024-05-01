@@ -287,7 +287,7 @@ def correlation_heatmap(df):
     fig, ax = plt.subplots(figsize=(10, 8))
     sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax, fmt=".2f")
     ax.set_title('Correlation Heatmap')
-    st.pyplot(fig)  # Ensure this is being called correctly
+    st.pyplot(fig) 
 
 
 def interactive_scatter_plot(df):
