@@ -252,15 +252,6 @@ def additional_visualizations(df):
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
-    # Correlation Heatmap
-    if set(['popularity_y', 'duration_ms_y']).issubset(df.columns):
-        correlation_data = df[['popularity_y', 'duration_ms_y']]
-        correlation = correlation_data.corr()
-        fig, ax = plt.subplots()
-        sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax)
-        ax.set_title('Correlation Heatmap')
-        st.pyplot(fig)
-
     # Pie Chart for Album Contribution
     if 'Album' in df.columns and 'popularity_y' in df.columns:
         album_contribution = df.groupby('Album')['popularity_y'].sum()
@@ -269,6 +260,27 @@ def additional_visualizations(df):
         ax.set_title('Recent Album Contribution to Overall Popularity')
         ax.set_ylabel('')
         st.pyplot(fig)
+
+def correlation_heatmap(df):
+    # Check if the desired columns exist in the DataFrame
+    cols_to_check = ['popularity_y', 'duration_ms_y', 'energy', 'danceability', 'acousticness', 'valence']
+    available_cols = [col for col in cols_to_check if col in df.columns]
+    
+    if not available_cols:
+        st.write("None of the specified columns are available in the DataFrame.")
+        return
+
+    # Filter the DataFrame to include only the available columns
+    correlation_data = df[available_cols]
+
+    # Calculate the correlation matrix
+    correlation = correlation_data.corr()
+
+    # Create the heatmap
+    fig, ax = plt.subplots(figsize=(10, 8))  # Sizing the figure to make sure it's big enough to read
+    sns.heatmap(correlation, annot=True, cmap='coolwarm', ax=ax, fmt=".2f")
+    ax.set_title('Correlation Heatmap')
+    st.pyplot(fig)
 
 def interactive_scatter_plot(df):
     if df.empty:
@@ -405,6 +417,9 @@ def main():
     """)
 
     plot_alternative_visualizations(filtered_tracks)
+
+    df = pd.DataFrame()
+    correlation_heatmap(df)
 
     # Advanced Visualizations
     st.header('Advanced Visualizations of Combined Data')
