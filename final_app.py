@@ -74,13 +74,27 @@ def display_trends(df):
     if df.empty:
         st.write("No data available for analysis.")
         return
+    
+    # Initialize a dictionary to store the names and average values of the metrics
+    metrics = {
+        'danceability': 'Danceability',
+        'energy': 'Energy',
+        'instrumentalness': 'Instrumentalness',
+        'liveness': 'Liveness',
+        'loudness': 'Loudness',
+        'speechiness': 'Speechiness',
+        'tempo': 'Tempo',
+        'valence': 'Valence'
+    }
 
-    average_danceability = df['danceability'].mean()
-    average_energy = df['energy'].mean()
+    # Loop through the dictionary, calculate the mean, and display results
+    for metric, display_name in metrics.items():
+        if metric in df.columns:
+            average_value = df[metric].mean()
+            st.write(f"**Average {display_name}:** {average_value:.2f}")
+        else:
+            st.write(f"{display_name} data not available.")
 
-    # Display the averages
-    st.write(f"**Average Danceability:** {average_danceability:.2f}")
-    st.write(f"**Average Energy:** {average_energy:.2f}")
 
 
 def fetch_and_save_spotify_data():
