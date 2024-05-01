@@ -267,7 +267,7 @@ def additional_visualizations(df):
         album_contribution = df.groupby('Album')['popularity_y'].sum()
         fig, ax = plt.subplots()
         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
-        ax.set_title('Album Contribution to Overall Popularity')
+        ax.set_title('Recent Album Contribution to Overall Popularity')
         ax.set_ylabel('')
         st.pyplot(fig)
 
