@@ -72,13 +72,13 @@ def clean_artist_name(name):
 
 def fetch_and_save_spotify_data():
     artist_uris = {
+        'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM',
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
         'Bad Bunny': 'spotify:artist:4q3ewBCX7sLwd24euuV69X',
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
         'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4',
         'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ',
-        'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb',
-        'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM'
+        'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
     }
 
     database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
@@ -90,27 +90,57 @@ def fetch_and_save_spotify_data():
 
     try:
         for artist_name, artist_uri in artist_uris.items():
-            tracks_data = fetch_artist_top_tracks(artist_uri)
-            for data in tracks_data:
-                artist = session.query(Artist).filter_by(id=data['artist_id']).first()
-                if not artist:
-                    artist = Artist(id=data['artist_id'], name=data['artist_name'])
-                    session.add(artist)
-                album = session.query(Album).filter_by(id=data['album_id']).first()
-                if not album:
-                    album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
-                    session.add(album)
-                track = session.query(Track).filter_by(id=data['track_id']).first()
-                if not track:
-                    track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
-                    session.add(track)
+            try:
+                tracks_data = fetch_artist_top_tracks(artist_uri)
+                for data in tracks_data:
+                    try:
+                        artist = session.query(Artist).filter_by(id=data['artist_id']).first()
+                        if not artist:
+                            artist = Artist(id=data['artist_id'], name=data['artist_name'])
+                            session.add(artist)
+                        album = session.query(Album).filter_by(id=data['album_id']).first()
+                        if not album:
+                            album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
+                            session.add(album)
+                        track = session.query(Track).filter_by(id=data['track_id']).first()
+                        if not track:
+                            track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
+                            session.add(track)
+                    except Exception as e:
+                        logging.error(f"Error saving track data for {artist_name}: {e}")
+            except Exception as e:
+                logging.error(f"Error fetching Spotify data for {artist_name}: {e}")
             session.commit()
-            logging.info(f"Data for {artist_name} successfully saved to the database")
     except Exception as e:
-        logging.error(f"An error occurred: {e}")
+        logging.error(f"Database operation failed: {e}")
         session.rollback()
     finally:
         session.close()
+    # try:
+    #     for artist_name, artist_uri in artist_uris.items():
+    #         tracks_data = fetch_artist_top_tracks(artist_uri)
+    #         for data in tracks_data:
+    #             artist = session.query(Artist).filter_by(id=data['artist_id']).first()
+    #             if not artist:
+    #                 artist = Artist(id=data['artist_id'], name=data['artist_name'])
+    #                 session.add(artist)
+    #             album = session.query(Album).filter_by(id=data['album_id']).first()
+    #             if not album:
+    #                 album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
+    #                 session.add(album)
+    #             track = session.query(Track).filter_by(id=data['track_id']).first()
+    #             if not track:
+    #                 track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
+    #                 session.add(track)
+    #         session.commit()
+    #         logging.info(f"Data for {artist_name} successfully saved to the database")
+    # except Exception as e:
+    #     logging.error(f"An error occurred: {e}")
+    #     session.rollback()
+    # finally:
+    #     session.close()
+
+
 
 # Remaining functions remain unchanged
 
