@@ -198,14 +198,22 @@ def plot_data(df):
         st.write("No data available to plot.")
         return
 
-    # Histogram for Popularity
+    # Ensure the 'popularity' column is present in the DataFrame
     if 'popularity' in df.columns:
         bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
+        
+        # Create a new figure and axes
         fig, ax = plt.subplots()
+        
+        # Plotting the histogram using the axes `ax`
         df['popularity'].hist(ax=ax, bins=bins)
         ax.set_xlabel('Popularity')
         ax.set_ylabel('Frequency')
+        
+        # Display the plot in Streamlit
         st.pyplot(fig)
+    else:
+        st.error('The "popularity" column is not present in the dataset.')
 
 def plot_alternative_visualizations(df):
     if df.empty:
