@@ -11,9 +11,6 @@ import seaborn as sns
 import altair as alt
 from spotipy.oauth2 import SpotifyClientCredentials
 
-# Load environment variables from .env file
-load_dotenv()
-
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
@@ -47,10 +44,17 @@ class Track(Base):
     album = relationship("Album", back_populates="tracks")
 
 # Initialize Spotify client
-client_id = '5b2023b50cd44ccca291f436252f1381'
-client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
+# Using secrets from Streamlit Share
+client_id = st.secrets["SPOTIFY_CLIENT_ID"]
+client_secret = st.secrets["SPOTIFY_CLIENT_SECRET"]
 credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=credentials)
+
+# Database connection setup using secrets
+database_url = st.secrets["DATABASE_URL"]
+engine = create_engine(database_url)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 def fetch_artist_top_tracks(artist_uri):
     results = sp.artist_top_tracks(artist_uri)
@@ -112,7 +116,6 @@ def fetch_and_save_spotify_data():
         'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
     }
 
-    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
 
     # Database connection setup
     engine = create_engine(database_url)
@@ -159,8 +162,6 @@ def load_filtered_spotify_data():
     return df
 
 def load_spotify_tracks_db():
-    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
-
     # Database connection setup
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
