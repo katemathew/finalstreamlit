@@ -145,45 +145,6 @@ def fetch_and_save_spotify_data():
         session.rollback()
     finally:
         session.close()
-    # try:
-    #     for artist_name, artist_uri in artist_uris.items():
-    #         tracks_data = fetch_artist_top_tracks(artist_uri)
-    #         for data in tracks_data:
-    #             artist = session.query(Artist).filter_by(id=data['artist_id']).first()
-    #             if not artist:
-    #                 artist = Artist(id=data['artist_id'], name=data['artist_name'])
-    #                 session.add(artist)
-    #             album = session.query(Album).filter_by(id=data['album_id']).first()
-    #             if not album:
-    #                 album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
-    #                 session.add(album)
-    #             track = session.query(Track).filter_by(id=data['track_id']).first()
-    #             if not track:
-    #                 track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
-    #                 session.add(track)
-    #         session.commit()
-    #         logging.info(f"Data for {artist_name} successfully saved to the database")
-    # except Exception as e:
-    #     logging.error(f"An error occurred: {e}")
-    #     session.rollback()
-    # finally:
-    #     session.close()
-
-
-
-# Remaining functions remain unchanged
-
-
-# def load_setlist_data():
-#     df = pd.read_csv('setlist_data.csv')
-#     df.rename(columns={'Artist Name': 'Artist'}, inplace=True)
-#     return df
-
-# def load_filtered_spotify_data():
-#     df = pd.read_csv('filtered_spotify_data.csv')
-#     # Removing brackets and quotes from artist names
-#     df['Artist'] = df['artists'].str.replace(r"[\[\]']", "", regex=True)
-#     return df
 
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
@@ -227,33 +188,10 @@ def load_spotify_tracks_db():
 
     return tracks
 
-# def analyze_overlaps(df1, df2, key='Artist'):
-#     return pd.merge(df1, df2, on=key, how='inner')
-
-# def analyze_overlaps(df1, df2, key='Artist'):
-#     common = pd.merge(df1, df2, on=key, how='inner')
-#     return common
-
-# combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
-
 def analyze_overlaps(df1, df2, df3, key='Artist'):
     combined_data = pd.merge(df1, df2, on=key, how='inner')
     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return final_combined_data
-
-# def plot_data(df):
-#     if df.empty:
-#         st.write("No data available to plot.")
-#         return
-
-#     # Adding a slider to control the number of bins in the histogram
-#     bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
-    
-#     fig, ax = plt.subplots()
-#     df['popularity'].hist(ax=ax, bins=bins)
-#     ax.set_xlabel('Popularity')
-#     ax.set_ylabel('Frequency')
-#     st.pyplot(fig)
 
 def plot_data(df):
     if df.empty:
@@ -332,6 +270,61 @@ def additional_visualizations(df):
         ax.set_title('Album Contribution to Overall Popularity')
         ax.set_ylabel('')
         st.pyplot(fig)
+
+def interactive_scatter_plot(df):
+    if df.empty:
+        st.write("No data available for plot.")
+        return
+
+    # Allow the user to select which columns to plot
+    x_options = df.select_dtypes(include=['float64', 'int']).columns.tolist()
+    y_options = x_options
+    x_axis = st.selectbox("Choose X-axis", options=x_options, index=x_options.index('duration_ms_y'))
+    y_axis = st.selectbox("Choose Y-axis", options=y_options, index=y_options.index('popularity_y'))
+
+    # Create the plot
+    chart = alt.Chart(df).mark_circle(size=60).encode(
+        x=x_axis,
+        y=y_axis,
+        tooltip=[x_axis, y_axis]
+    ).interactive()
+
+    st.altair_chart(chart, use_container_width=True)
+
+def interactive_time_series(df):
+    if df.empty or 'release_date' not in df.columns:
+        st.write("No data available for plot.")
+        return
+
+    # Ensure correct date parsing by specifying the format
+    df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
+    df = df.sort_values('release_date')
+
+    # Handle cases where dates might be coerced to NaT (not a time) if they don't fit the format
+    if df['release_date'].isnull().any():
+        st.write("Some dates could not be parsed.")
+        df = df.dropna(subset=['release_date'])
+
+    # Create a slider for selecting years
+    min_year = int(df['release_date'].dt.year.min())
+    max_year = int(df['release_date'].dt.year.max())
+    year_to_view = st.slider("Select Year", min_value=min_year, max_value=max_year, value=min_year)
+
+    # Filter data based on year
+    filtered_data = df[df['release_date'].dt.year == year_to_view]
+    
+    # Check if filtered data is empty
+    if filtered_data.empty:
+        st.write("No data available for the selected year.")
+        return
+
+    fig, ax = plt.subplots()
+    sns.lineplot(x='release_date', y='popularity_y', data=filtered_data, ax=ax)
+    ax.set_title(f'Popularity Over Time in {year_to_view}')
+    ax.set_xlabel('Release Date')
+    ax.set_ylabel('Popularity')
+    st.pyplot(fig)
+
         
 def main():
     st.title('Music Data Analysis App')
@@ -374,25 +367,18 @@ def main():
     # New Section for Advanced Visualizations
     st.header('Advanced Visualizations of Combined Data')
     additional_visualizations(combined_data)
-    
-    # combined_data = analyze_overlaps(setlist_data, spotify_data, tracks, 'Artist')
-    # st.header('Combined Artist Table with Albums')
-    # st.write(combined_data)
+
+    st.header('Interactive Scatter Plot')
+    interactive_scatter_plot(combined_data)
+
+    st.header('Interactive Time Series Analysis')
+    interactive_time_series(combined_data)
 
      # Display trends
     if not combined_data.empty:
         st.header('Trends Analysis')
         display_trends(combined_data)
 
-    
-    # overlaps = analyze_overlaps(setlist_data, spotify_data, 'Artist')
-    # st.header('Overlaps in Artists')
-    # st.write(overlaps)
-    # st.header('Combined Artist Table with Albums')
-    # st.write(combined_data)
-    
-    # st.header('Song Popularity Analysis')
-    # plot_data(tracks)
 
 if __name__ == "__main__":
     main()
