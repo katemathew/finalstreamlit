@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import logging
 import spotipy
 import seaborn as sns
+import altair as alt
 from spotipy.oauth2 import SpotifyClientCredentials
 
 # Load environment variables from .env file
@@ -268,38 +269,10 @@ def plot_data(df):
         ax.set_ylabel('Frequency')
         st.pyplot(fig)
 
-    # Line plot for album release date trends
-    if 'release_date' in df.columns and not df['release_date'].isnull().all():
-        df['release_date'] = pd.to_datetime(df['release_date'], errors='coerce')
-        df = df.dropna(subset=['release_date'])  # Ensure no null values
-        df['release_year'] = df['release_date'].dt.year
-        release_trends = df.groupby('release_year').size()
-
-        if not release_trends.empty:
-            fig, ax = plt.subplots()
-            release_trends.plot(kind='line', ax=ax)
-            ax.set_title('Album Release Trends')
-            ax.set_xlabel('Year')
-            ax.set_ylabel('Number of Albums Released')
-            st.pyplot(fig)
-        else:
-            st.write("No sufficient data for release trends.")
-
 def plot_alternative_visualizations(df):
     if df.empty:
         st.write("No data available to plot.")
         return
-
-    # # Bar Chart for Album Releases by Year
-    # if 'release_date' in df.columns:
-    #     # Debugging: Output original data sample
-    #     st.write("Original date samples:", df['release_date'].head())
-
-    #     # Explicitly specify the date format for parsing
-    #     df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
-
-    #     # Debugging: Check if dates are parsed correctly
-    #     st.write("Parsed dates:", df['release_date'].
 
     # Box Plot for Track Popularity
     if 'popularity' in df.columns:
