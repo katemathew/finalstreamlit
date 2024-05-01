@@ -327,7 +327,6 @@ def interactive_time_series(df):
         
 def main():
     st.title('Music Data Analysis App')
-    st.title('Music Data Analysis App')
     st.subheader('Kate Mathew')
 
     # Instructions as a dropdown
