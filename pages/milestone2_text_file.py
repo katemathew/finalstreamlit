@@ -3,7 +3,7 @@ import streamlit as st
 def app():
     st.title('Navigating Zip File & Data Modeling Insights')
 
-    st.write("""Milestone 2 Text File (milestone2_text_file.py): I wanted to include the Milestone 2 text file as well that was missing from the original zip submission, not sure what happened!""")
+    st.write(""" I wanted to include the Milestone 2 text file content as well that was missing from the original zip submission, not sure what happened!""")
 
     # Navigating Zip File Section
     st.header("Navigating Zip File")
