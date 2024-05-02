@@ -198,14 +198,13 @@ def plot_data(df):
         st.write("No data available to plot.")
         return
 
-    # Ensure the 'popularity' column is present in the DataFrame
     if 'popularity' in df.columns:
         bins = st.slider("Select number of bins for histogram:", min_value=10, max_value=100, value=20, step=5)
         
         # Create a new figure and axes
         fig, ax = plt.subplots()
         
-        # Plotting the histogram using the axes `ax`
+        # Plotting the histogram
         df['popularity'].hist(ax=ax, bins=bins)
         ax.set_xlabel('Popularity')
         ax.set_ylabel('Frequency')
@@ -365,12 +364,12 @@ def main():
         7. **Visualization 5** - Pie Chart Showing Recent Album Contribution and Popularity.
         8. **Visualization 6** - Interactive Scatter Plot. Explore on your own! Choose two variables and see how they correlate.
         9. **Visualization 7** - Interactive Time Series Analysis. Feel free to explore time with the slider and see how popularity and release date correlate!
-        10. **Trend Analysis** - Finally, we have an average trend analysis for the curious folks! 
+        10. **Trend Analysis** - Finally, There is an average trend analysis for the curious folks! 
         
         Thanks for exploring!
         """)
 
-     # Findings Section
+     # Findings 
     with st.expander("**Findings**"):
         st.write("""
         My analysis reveals certain trends and artist-specific tendencies that highlight the intersection between various musical attributes and song popularity. It is important to note the subjectivity of music, and while there were general and artist based trends, many aspects of songs and popularity cannot be measured easily, as there are outside factors that can influence these decisions. Here are some key insights:
