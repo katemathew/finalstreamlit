@@ -499,13 +499,13 @@ def main():
     """)
 
     st.header('Frequency of Song Popularity')
-    plot_data()
+    plot_data(combined_kaggle_spotify)
 
     
     st.header('Popularity Distribution Box Plot')
-    popularity_distribution_box_plot(filtered_tracks)
+    popularity_distribution_box_plot(combined_kaggle_spotify)
     st.header('Popularity vs Track Duration Scatter Plot')
-    popularity_versus_track_duration_scatter_plot(filtered_tracks)
+    popularity_versus_track_duration_scatter_plot(combined_kaggle_spotify)
     # plot_alternative_visualizations(filtered_tracks)
 
     if not combined_data.empty and {'popularity', 'duration_ms'}.issubset(combined_data.columns):
