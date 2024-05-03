@@ -483,7 +483,7 @@ def main():
 
     # Spotify Tracks Data Expander
     with st.expander("**Spotify Tracks Data** - This data was retrieved from the Spotify API, providing current metrics for songs and artists. Click To Explore A Few Lines."):
-        st.write(tracks.head())
+        st.write(tracks.head(50))
 
 
     # Define a list of allowed artists
