@@ -469,10 +469,10 @@ def main():
     filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
 
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
-    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist']).sort_values('name')
+    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist'])
 
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
-    filtered_tracks = filtered_tracks.drop(columns='track_id')
+    filtered_tracks = filtered_tracks.drop(columns='track_id').sort_values('name')
 
     st.header('setlist')
     st.write(filtered_setlist_data)
