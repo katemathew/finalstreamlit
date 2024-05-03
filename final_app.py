@@ -416,12 +416,14 @@ def main():
         st.write(tracks.head())
 
 
-    # Artist selection dropdown
-    artist_list = tracks['Artist'].unique()
-    selected_artist = st.selectbox('**Select an Artist**', artist_list)
+    # Define a list of allowed artists
+    allowed_artists = ["taylor swift", "drake", "the weeknd", "bad bunny"]
 
-    # Note below the dropdown
-    st.caption("Different artists may not have the same results, some may have a lot of data, whereas others may have fewer entries or none. This really depends on if their performance data is available on Setlist.FM, and correlates to data in both the Kaggle dataset as well as the Spotify API.")
+    # Filter the artist list to include only the allowed artists
+    artist_list = [artist for artist in tracks['Artist'].unique() if artist.lower() in allowed_artists]
+
+    # Artist selection dropdown
+    selected_artist = st.selectbox('**Select an Artist**', artist_list)
 
     # Filter data by selected artist
     filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
