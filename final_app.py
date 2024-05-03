@@ -452,7 +452,7 @@ def main():
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
-    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
+    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks)
     st.write(combined_data)
 
     st.header('Song Popularity')
