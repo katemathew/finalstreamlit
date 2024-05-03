@@ -477,18 +477,18 @@ def main():
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
     filtered_tracks = filtered_tracks.drop(columns=['track_id', 'popularity']).sort_values('name').drop_duplicates(subset='name', keep='first')
 
-    st.header('setlist')
-    st.write(filtered_setlist_data)
-    st.header('kaggle')
-    st.write(filtered_spotify_data)
-    st.header('spotify')
-    st.write(filtered_tracks)
+    # st.header('setlist')
+    # st.write(filtered_setlist_data)
+    # st.header('kaggle')
+    # st.write(filtered_spotify_data)
+    # st.header('spotify')
+    # st.write(filtered_tracks)
 
     
     #combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'name')
     combined_kaggle_spotify = pd.merge(filtered_spotify_data, filtered_tracks, on='name', how='inner')
-    st.header('kaggle and spotify')
-    st.write(combined_kaggle_spotify)
+    # st.header('kaggle and spotify')
+    # st.write(combined_kaggle_spotify)
     combined_data = pd.merge(setlist_data, combined_kaggle_spotify, on='name', how='right')
 
     # Display Combined Data for selected artist
