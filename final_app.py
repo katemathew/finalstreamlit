@@ -52,23 +52,7 @@ client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
 credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=credentials)
 
-def fetch_artist_albums(artist_uri):
-    # Fetch all albums by the artist
-    results = sp.artist_albums(artist_uri, album_type='album,single,compilation', limit=50)
-    albums = results['items']
-    while results['next']:  # Continue fetching next page if available
-        results = sp.next(results)
-        albums.extend(results['items'])
-    return albums
 
-def fetch_album_tracks(album_id):
-    # Fetch all tracks from an album
-    results = sp.album_tracks(album_id)
-    tracks = results['items']
-    while results['next']:  # Continue fetching next page if available
-        results = sp.next(results)
-        tracks.extend(results['items'])
-    return tracks
 
 def clean_artist_name(name):
     """Clean artist names by removing unwanted characters and making them lowercase."""
@@ -100,6 +84,23 @@ def display_trends(df):
             st.write(f"{display_name} data not available.")
 
 
+def fetch_artist_albums(artist_uri):
+    # Fetch all albums by the artist
+    results = sp.artist_albums(artist_uri, album_type='album,single,compilation', limit=50)
+    albums = results['items']
+    while results['next']:  # Continue fetching next page if available
+        results = sp.next(results)
+        albums.extend(results['items'])
+    return albums
+
+def fetch_album_tracks(album_id):
+    # Fetch all tracks from an album
+    results = sp.album_tracks(album_id)
+    tracks = results['items']
+    while results['next']:  # Continue fetching next page if available
+        results = sp.next(results)
+        tracks.extend(results['items'])
+    return tracks
 
 def fetch_and_save_spotify_data():
     artist_uris = {
@@ -136,7 +137,7 @@ def fetch_and_save_spotify_data():
                             session.add(artist)
                         album_record = session.query(Album).filter_by(id=album['id']).first()
                         if not album_record:
-                            album_record = Album(id=album['id'], name=album['name'], release_date=album['release_date'], artist_id=artist.id)
+                            album_record = Album(id=album['id'], name=album['name'], artist_id=artist.id)
                             session.add(album_record)
                         # Checking for the existence of the track
                         track_record = session.query(Track).filter_by(id=track['id']).first()
@@ -500,7 +501,7 @@ def main():
     filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
 
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
-    #filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist'])
+    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist'])
 
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
     filtered_tracks = filtered_tracks.drop(columns='track_id')
