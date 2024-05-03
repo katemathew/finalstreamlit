@@ -217,7 +217,7 @@ def load_spotify_tracks_db():
     return tracks
 
 def analyze_overlaps(df1, df2, df3, key):
-    combined_kaggle_spotify = pd.merge(df2, df3, on=key, how='outer')
+    combined_kaggle_spotify = pd.merge(df2, df3, on=key, how='inner')
     st.header('kaggle and spotify')
     st.write(combined_kaggle_spotify.head(15))
     combined_data = pd.merge(df1, combined_kaggle_spotify, on=key, how='outer')
