@@ -103,18 +103,18 @@ def display_trends(df):
 
 def fetch_and_save_spotify_data():
     artist_uris = {
-        'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM',
+        
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
         'Bad Bunny': 'spotify:artist:4q3ewBCX7sLwd24euuV69X',
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
-        'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4',
-        'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ',
-        'Metro Boomin': 'spotify:artist:0iEtIxbK0KxaSlF7G42ZOp',
-        'Karol G': 'spotify:artist:790FomKkXshlbRYZFtlgla',
-        'Future': 'spotify:artist:1RyvyyTE3xzB2ZywiAwp0i',
-        'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
+        'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4'
     }
-
+    # 'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM',
+    # 'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ',
+    #     'Metro Boomin': 'spotify:artist:0iEtIxbK0KxaSlF7G42ZOp',
+    #     'Karol G': 'spotify:artist:790FomKkXshlbRYZFtlgla',
+    #     'Future': 'spotify:artist:1RyvyyTE3xzB2ZywiAwp0i',
+    #     'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
     database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
 
     # Database connection setup
