@@ -481,9 +481,15 @@ def main():
     st.header('spotify')
     st.write(filtered_tracks)
 
+    
+    #combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'name')
+    combined_kaggle_spotify = pd.merge(filtered_spotify_data, filtered_tracks, on='name', how='inner')
+    st.header('kaggle and spotify')
+    st.write(combined_kaggle_spotify)
+    combined_data = pd.merge(setlist_data, combined_kaggle_spotify, on='name', how='right')
+
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
-    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'name')
     st.write(combined_data)
 
     # Explanation about Spotify Popularity Index
@@ -493,7 +499,7 @@ def main():
     """)
 
     st.header('Frequency of Song Popularity')
-    plot_data(filtered_tracks)
+    plot_data()
 
     
     st.header('Popularity Distribution Box Plot')
