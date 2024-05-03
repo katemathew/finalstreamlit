@@ -458,12 +458,14 @@ def main():
         2. **Frequency of Song Popularity** - Shows frequency of track's popularity for an Artist using their Spotify Popularity Score. Feel free to use the slider to change the bin size and explore the data more broadly!
         3. **Popularity Distribution Box Plot** - Shows The Average Range For Popularity Scores For An Artist, As Well As Outliers.
         4. **Popularity vs Track Duration Scatter Plot** - Looks At Artist Data and Shows If There Are Any Trends Within Track Duration and Popularity.
-        5. **Correlation Heat Map** - Shows how strong relationships are between track characteristics.
-        6. **Popularity over Time Time Series Plot** - Looks At Trends Between Popularity and Release Date
-        7. **Album Popularity Contribution Pie Chart** - Pie Chart Showing Recent Album Contribution and Popularity.
-        8. **Interactive Scatter Plot** - Explore on your own! Choose two variables and see how they correlate.
-        9. **Interactive Time Series Analysis** - Feel free to explore time with the slider and see how popularity and release date correlate!
-        10. **Trend Analysis** - Finally, There is an average trend analysis for the curious folks! 
+        5. **Popularity vs Track Duration For Setlist Specific Songs Scatter Plot** - Looks At Setlist Based Artist Data To Identify If There Are Any Trends Within Setlist, Track Duration, and Popularity.
+        6. **Popularity vs Energy For Setlist Specific Songs Scatter Plot** - Looks At Setlist Based Artist Data To Identify If There Are Any Trends Within Setlist, Energy, and Popularity.
+        7. **Correlation Heat Map** - Shows how strong relationships are between track characteristics.
+        8. **Popularity over Time Time Series Plot** - Looks At Trends Between Popularity and Release Date
+        9. **Album Popularity Contribution Pie Chart** - Pie Chart Showing Recent Album Contribution and Popularity.
+        10. **Interactive Scatter Plot** - Explore on your own! Choose two variables and see how they correlate.
+        11. **Interactive Time Series Analysis** - Feel free to explore time with the slider and see how popularity and release date correlate!
+        12. **Trend Analysis** - Finally, There is an average trend analysis for the curious folks! 
         
         Thanks for exploring!
         """)
