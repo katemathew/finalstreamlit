@@ -456,7 +456,7 @@ def main():
 
 
     # Define a list of allowed artists
-    allowed_artists = ["taylor swift", "drake", "the weeknd", "bad bunny", "morgan wallen", "tame impala", "Peso Pluma", "Karol G", "Future"]
+    allowed_artists = ["taylor swift", "drake", "the weeknd", "bad bunny", "morgan wallen", "tame impala", "peso pluma", "karol g", "future"]
 
     # Filter the artist list to include only the allowed artists
     artist_list = [artist for artist in tracks['Artist'].unique() if artist.lower() in allowed_artists]
