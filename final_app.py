@@ -221,8 +221,7 @@ def plot_data(df):
         st.pyplot(fig)
     else:
         st.error('The "popularity" column is not present in the dataset.')
-
-def plot_alternative_visualizations(df):
+def popularity_distribution_box_plot(df):
     if df.empty:
         st.write("No data available to plot.")
         return
@@ -234,6 +233,11 @@ def plot_alternative_visualizations(df):
         ax.set_title('Popularity Distribution')
         ax.set_ylabel('Popularity Score')
         st.pyplot(fig)
+
+def popularity_versus_track_duration_scatter_plot(df):
+    if df.empty:
+        st.write("No data available to plot.")
+        return
 
     # Scatter Plot for Popularity vs. Track Duration
     if 'popularity' in df.columns and 'duration_ms' in df.columns:
@@ -247,7 +251,31 @@ def plot_alternative_visualizations(df):
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
-def additional_visualizations(df):
+# def plot_alternative_visualizations(df):
+#     if df.empty:
+#         st.write("No data available to plot.")
+#         return
+
+#     # Box Plot for Track Popularity
+#     if 'popularity' in df.columns:
+#         fig, ax = plt.subplots()
+#         df['popularity'].plot(kind='box', ax=ax)
+#         ax.set_title('Popularity Distribution')
+#         ax.set_ylabel('Popularity Score')
+#         st.pyplot(fig)
+
+#     # Scatter Plot for Popularity vs. Track Duration
+#     if 'popularity' in df.columns and 'duration_ms' in df.columns:
+#         # Convert duration from milliseconds to seconds
+#         df['duration_sec'] = df['duration_ms'] / 1000
+
+#         fig, ax = plt.subplots()
+#         df.plot(kind='scatter', x='duration_sec', y='popularity', ax=ax)
+#         ax.set_title('Popularity vs. Track Duration')
+#         ax.set_xlabel('Duration (seconds)')
+#         ax.set_ylabel('Popularity')
+#         st.pyplot(fig)
+def time_series_plot_pop_over_time(df):
     if df.empty:
         st.write("No data available for plot.")
         return
@@ -267,6 +295,11 @@ def additional_visualizations(df):
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
+def pie_chart_album_contribution(df):
+    if df.empty:
+        st.write("No data available for plot.")
+        return
+    
     # Pie Chart for Album Contribution
     if 'Album' in df.columns and 'popularity_y' in df.columns:
         album_contribution = df.groupby('Album')['popularity_y'].sum()
@@ -275,6 +308,35 @@ def additional_visualizations(df):
         ax.set_title('Recent Album Contribution to Overall Popularity')
         ax.set_ylabel('')
         st.pyplot(fig)
+
+# def additional_visualizations(df):
+#     if df.empty:
+#         st.write("No data available for plot.")
+#         return
+
+#     # Time Series Plot for Popularity Over Time
+#     if 'release_date' in df.columns and 'popularity_y' in df.columns:
+#         # Date
+#         df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
+#         time_data = df.dropna(subset=['release_date', 'popularity_y'])
+#         time_data = time_data.sort_values('release_date')
+
+#         # Plot
+#         fig, ax = plt.subplots()
+#         sns.lineplot(x='release_date', y='popularity_y', data=time_data, ax=ax)
+#         ax.set_title('Popularity Over Time')
+#         ax.set_xlabel('Release Date')
+#         ax.set_ylabel('Popularity')
+#         st.pyplot(fig)
+
+#     # Pie Chart for Album Contribution
+#     if 'Album' in df.columns and 'popularity_y' in df.columns:
+#         album_contribution = df.groupby('Album')['popularity_y'].sum()
+#         fig, ax = plt.subplots()
+#         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
+#         ax.set_title('Recent Album Contribution to Overall Popularity')
+#         ax.set_ylabel('')
+#         st.pyplot(fig)
 
 def correlation_heatmap(df):
     if df.empty:
@@ -357,21 +419,21 @@ def main():
     st.subheader('Kate Mathew')
 
     # Instructions
-    with st.expander("**Welcome to my Music Data Analysis App!**"):
+    with st.expander("**Welcome to my Music Data Analysis App, Start Here!**"):
         st.write("""
         There is a lot you can do here to explore trends with artists and songs. First, if you want to explore what each data table/data collection source looks like individually, there are dropdowns for each individual scraper to see how they collect information. Now on to the fun stuff! 
         
         To get started, select an artist from the dropdown. These artists were chosen as a combination from recently scraped setlist data and the most popular artists on Spotify currently. Once you have your artist selected, there are many things you can explore:
         
         1. **Combined Dataset for The Artist** - This shows how the three datasets merge together, which will be used for further analysis and visualization.
-        2. **Song Popularity** - Shows frequency of tracks for an Artist versus their Spotify Popularity Score. Feel free to use the slider to change the bin size and explore the data more broadly!
-        3. **Visualization 1** - Popularity Distribution Box Plot. Shows The Average Range For Popularity Scores For An Artist, As Well As Outliers.
-        4. **Visualization 2** - Popularity vs Track Duration Scatter Plot. Looks At Artist Data and Shows If There Are Any Trends Within Track Duration and Popularity.
-        5. **Visualization 3** - Popularity over Time Time Series Plot. Looks At Trends Between Popularity and Release Date.
-        6. **Visualization 4** - Correlation Heat Map. The off-diagonal value of -0.61 between popularity and duration_ms suggests a moderate negative correlation. This implies that as the duration of a track increases, its popularity tends to decrease, or vice versa.
-        7. **Visualization 5** - Pie Chart Showing Recent Album Contribution and Popularity.
-        8. **Visualization 6** - Interactive Scatter Plot. Explore on your own! Choose two variables and see how they correlate.
-        9. **Visualization 7** - Interactive Time Series Analysis. Feel free to explore time with the slider and see how popularity and release date correlate!
+        2. **Frequency of Song Popularity** - Shows frequency of track's popularity for an Artist using their Spotify Popularity Score. Feel free to use the slider to change the bin size and explore the data more broadly!
+        3. **Popularity Distribution Box Plot** - Shows The Average Range For Popularity Scores For An Artist, As Well As Outliers.
+        4. **Popularity vs Track Duration Scatter Plot** - Looks At Artist Data and Shows If There Are Any Trends Within Track Duration and Popularity.
+        5. **Correlation Heat Map** - Shows how strong relationships are between track characteristics.
+        6. **Popularity over Time Time Series Plot** - Looks At Trends Between Popularity and Release Date
+        7. **Album Popularity Contribution Pie Chart** - Pie Chart Showing Recent Album Contribution and Popularity.
+        8. **Interactive Scatter Plot** - Explore on your own! Choose two variables and see how they correlate.
+        9. **Interactive Time Series Analysis** - Feel free to explore time with the slider and see how popularity and release date correlate!
         10. **Trend Analysis** - Finally, There is an average trend analysis for the curious folks! 
         
         Thanks for exploring!
@@ -435,21 +497,30 @@ def main():
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
 
+    st.write(filtered_setlist_data.head())
+    st.write(filtered_spotify_data.head())
+    st.write(filtered_tracks.head())
+
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
     combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
     st.write(combined_data)
 
-    st.header('Song Popularity')
-    plot_data(filtered_tracks)
-
-     # Explanation about Spotify Popularity Index
+    # Explanation about Spotify Popularity Index
     st.header(f'Visualizations for {selected_artist}')
     st.markdown("""
     **The Spotify Popularity Index** is a 0-to-100 score that ranks how popular an artist is relative to other artists on Spotify. As your numbers grow, you'll get placed in more editorial playlists and increase your reach on algorithmic playlists and recommendations.
     """)
 
-    plot_alternative_visualizations(filtered_tracks)
+    st.header('Frequency of Song Popularity')
+    plot_data(filtered_tracks)
+
+    
+    st.header('Popularity Distribution Box Plot')
+    popularity_distribution_box_plot(filtered_tracks)
+    st.header('Popularity vs Track Duration Scatter Plot')
+    popularity_versus_track_duration_scatter_plot(filtered_tracks)
+    # plot_alternative_visualizations(filtered_tracks)
 
     if not combined_data.empty and {'popularity_y', 'duration_ms_y'}.issubset(combined_data.columns):
         st.header('Correlation Heatmap of Combined Data')
@@ -457,10 +528,15 @@ def main():
     else:
         st.error('Data not suitable for correlation heatmap.')
     
+    st.header('Album Popularity Contribution Pie Chart')
+    pie_chart_album_contribution(combined_data)
 
-    # Advanced Visualizations
-    st.header('Advanced Visualizations of Combined Data')
-    additional_visualizations(combined_data)
+    st.header('Popularity over Time Time Series Plot')
+    time_series_plot_pop_over_time(combined_data)
+
+    # # Advanced Visualizations
+    # st.header('Advanced Visualizations of Combined Data')
+    # additional_visualizations(combined_data)
 
     st.header('Interactive Scatter Plot')
     interactive_scatter_plot(combined_data)
