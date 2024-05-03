@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 from sqlalchemy import create_engine, Column, String, Integer, ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 import logging
 import spotipy
 import seaborn as sns
@@ -85,9 +85,10 @@ def display_trends(df):
             st.write(f"{display_name} data not available.")
 
 
-def fetch_artist_albums(artist_uri):
+def fetch_artist_albums(artist_id):
     # Fetch all albums by the artist
-    results = sp.artist_albums(artist_uri, album_type='album,single,compilation', limit=50)
+    #results = sp.artist_albums(artist_id, album_type='album,single', limit=20)
+    results = sp.artist_albums(artist_id, album_type=None, country=None, limit=20, offset=0)
     albums = results['items']
     while results['next']:  # Continue fetching next page if available
         results = sp.next(results)
@@ -106,7 +107,7 @@ def fetch_album_tracks(album_id):
 def fetch_and_save_spotify_data():
     artist_uris = {
         
-        'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
+        'Taylor Swift': '06HL4z0CvFAxyc27GXpf02',
         'Bad Bunny': 'spotify:artist:4q3ewBCX7sLwd24euuV69X',
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
         'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4'
@@ -118,21 +119,24 @@ def fetch_and_save_spotify_data():
     #     'Future': 'spotify:artist:1RyvyyTE3xzB2ZywiAwp0i',
     #     'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
     database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
-
+    sp = spotipy.Spotify(client_credentials_manager=credentials)
     # Database connection setup
     engine = create_engine(database_url)
     connection = engine.connect()
     create_database_tables(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
-    all_tracks = []  # List to store track dictionaries for CSV output
+    # all_tracks = []  # List to store track dictionaries for CSV output
     for artist_name, artist_uri in artist_uris.items():
+        print(artist_name + artist_uri)
         try:
             albums = fetch_artist_albums(artist_uri)
             for album in albums:
+                print(album['id'])
                 tracks = fetch_album_tracks(album['id'])
                 for track in tracks:
                     try:
+                        print(track[id])
                         # Ensuring each artist and album is only added once
                         artist = session.query(Artist).filter_by(id=track['artists'][0]['id']).first()
                         if not artist:
@@ -183,7 +187,6 @@ def load_filtered_spotify_data():
     return df
 
 def load_spotify_tracks_db():
-    fetch_and_save_spotify_data()
     database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
 
     # Database connection setup
@@ -272,30 +275,6 @@ def popularity_versus_track_duration_scatter_plot(df):
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
-# def plot_alternative_visualizations(df):
-#     if df.empty:
-#         st.write("No data available to plot.")
-#         return
-
-#     # Box Plot for Track Popularity
-#     if 'popularity' in df.columns:
-#         fig, ax = plt.subplots()
-#         df['popularity'].plot(kind='box', ax=ax)
-#         ax.set_title('Popularity Distribution')
-#         ax.set_ylabel('Popularity Score')
-#         st.pyplot(fig)
-
-#     # Scatter Plot for Popularity vs. Track Duration
-#     if 'popularity' in df.columns and 'duration_ms' in df.columns:
-#         # Convert duration from milliseconds to seconds
-#         df['duration_sec'] = df['duration_ms'] / 1000
-
-#         fig, ax = plt.subplots()
-#         df.plot(kind='scatter', x='duration_sec', y='popularity', ax=ax)
-#         ax.set_title('Popularity vs. Track Duration')
-#         ax.set_xlabel('Duration (seconds)')
-#         ax.set_ylabel('Popularity')
-#         st.pyplot(fig)
 def time_series_plot_pop_over_time(df):
     if df.empty:
         st.write("No data available for plot.")
@@ -330,34 +309,6 @@ def pie_chart_album_contribution(df):
         ax.set_ylabel('')
         st.pyplot(fig)
 
-# def additional_visualizations(df):
-#     if df.empty:
-#         st.write("No data available for plot.")
-#         return
-
-#     # Time Series Plot for Popularity Over Time
-#     if 'release_date' in df.columns and 'popularity_y' in df.columns:
-#         # Date
-#         df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
-#         time_data = df.dropna(subset=['release_date', 'popularity_y'])
-#         time_data = time_data.sort_values('release_date')
-
-#         # Plot
-#         fig, ax = plt.subplots()
-#         sns.lineplot(x='release_date', y='popularity_y', data=time_data, ax=ax)
-#         ax.set_title('Popularity Over Time')
-#         ax.set_xlabel('Release Date')
-#         ax.set_ylabel('Popularity')
-#         st.pyplot(fig)
-
-#     # Pie Chart for Album Contribution
-#     if 'Album' in df.columns and 'popularity_y' in df.columns:
-#         album_contribution = df.groupby('Album')['popularity_y'].sum()
-#         fig, ax = plt.subplots()
-#         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
-#         ax.set_title('Recent Album Contribution to Overall Popularity')
-#         ax.set_ylabel('')
-#         st.pyplot(fig)
 
 def correlation_heatmap(df):
     if df.empty:
