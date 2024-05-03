@@ -477,7 +477,7 @@ def main():
     # filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
 
     filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
-    filtered_setlist_data['Setlist'] = 1
+    filtered_setlist_data['Setlist'] = "yes"
 
 
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
