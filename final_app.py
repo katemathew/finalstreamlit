@@ -109,6 +109,9 @@ def fetch_and_save_spotify_data():
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
         'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4',
         'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ',
+        'Metro Boomin': 'spotify:artist:0iEtIxbK0KxaSlF7G42ZOp',
+        'Karol G': 'spotify:artist:790FomKkXshlbRYZFtlgla',
+        'Future': 'spotify:artist:1RyvyyTE3xzB2ZywiAwp0i',
         'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
     }
 
