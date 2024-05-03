@@ -200,10 +200,21 @@ def load_spotify_tracks_db():
 #     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
 #     return final_combined_data
 
-def analyze_overlaps(df1, df2, df3, key='name'):
-    combined_data = pd.merge(df1, df2, on=key, how='inner')
-    final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
+def analyze_overlaps(df1, df2, df3):
+    # Ensure the 'name' column is also considered alongside 'Artist' for merging
+    keys = ['Artist', 'name']
+    
+    # Merge df1 and df2 on both 'Artist' and 'name' with inner join to ensure only matching entries are included
+    combined_data = pd.merge(df1, df2, on=keys, how='inner')
+    
+    # Merge the combined data with df3 on the same keys and with inner join
+    final_combined_data = pd.merge(combined_data, df3, on=keys, how='inner')
+    
+    # Drop duplicates if any exist after merging
+    final_combined_data = final_combined_data.drop_duplicates(subset=keys)
+    
     return final_combined_data
+
 
 def plot_data(df):
     if df.empty:
