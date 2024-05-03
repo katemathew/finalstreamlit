@@ -25,7 +25,7 @@ def app():
     - **Energy and Acoustics:**
       - Tracks with lower acoustic features typically exhibit higher energy levels. This suggests a preference for more electronically produced or upbeat music, which can vary significantly across different musical genres.
     - **Artist-Specific Observations:**
-      - **Taylor Swift:** For Taylor Swift, there is a particularily strong negative correlation between energy and acoustics, mirroring the style and in-depth lyrical work she puts into her slower, sadder songs.
+      - **Taylor Swift:** For Taylor Swift, there is a particularly strong negative correlation between energy and acoustics, mirroring the style and in-depth lyrical work she puts into her slower, sadder songs.
       - **Bad Bunny:** With Bad Bunny, the strongest correlation was between valence and duration, showing that typically, as his songs get longer, they become more negative/sad (valence decreases). This goes hand in hand with a negative correlation between energy and acoustics, as explained above for Taylor Swift.
       - **The Weeknd:** For The Weeknd, the link between track duration and popularity is particularly pronounced, providing insights into his song production strategy and its impact on commercial success.
       - **Drake:** Drake's tracks show weaker overall correlations, highlighting the diversity in his musical style. Notably, a negative correlation between duration and danceability in his music suggests that a longer duration typically decreases danceability, possibly due to the genre of rap, lyrical focus, or complex rhythms that characterize his songs.
