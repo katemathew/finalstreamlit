@@ -477,7 +477,6 @@ def main():
     # filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
 
     filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
-    filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
     filtered_setlist_data['Setlist'] = 1
 
 
@@ -499,7 +498,7 @@ def main():
     combined_kaggle_spotify = pd.merge(filtered_spotify_data, filtered_tracks, on='name', how='inner')
     # st.header('kaggle and spotify')
     # st.write(combined_kaggle_spotify)
-    combined_data = pd.merge(setlist_data, combined_kaggle_spotify, on='name', how='right')
+    combined_data = pd.merge(filtered_setlist_data, combined_kaggle_spotify, on='name', how='right')
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
