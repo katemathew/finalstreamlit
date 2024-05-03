@@ -262,7 +262,7 @@ def popularity_distribution_box_plot(df):
 def popularity_versus_track_duration_scatter_plot(df):
     if df.empty:
         st.write("No data available to plot.")
-        return
+        return 
 
     # Scatter Plot for Popularity vs. Track Duration
     if 'popularity' in df.columns and 'duration_ms' in df.columns:
@@ -276,7 +276,7 @@ def popularity_versus_track_duration_scatter_plot(df):
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
-ç
+
 
 def time_series_plot_pop_over_time(df):
     if df.empty:
