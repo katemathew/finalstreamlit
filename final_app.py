@@ -303,6 +303,31 @@ def popularity_setlist_versus_track_duration_scatter_plot(df):
     else:
         st.error("DataFrame does not contain the 'Setlist' column.")
 
+def popularity_setlist_versus_energy_scatter_plot(df):
+    if df.empty:
+        st.write("No data available for plot.")
+        return
+
+    # Check if 'Setlist' column exists and if it has the required value
+    if 'Setlist' in df.columns:
+        # Filter to get only rows where 'Setlist' equals yes
+        df = df[df['Setlist'] == "yes"]
+    
+        # Check if the DataFrame has the necessary columns for plotting
+        if 'popularity' in df.columns and 'energy' in df.columns:
+
+            # Create a scatter plot
+            fig, ax = plt.subplots()
+            df.plot(kind='scatter', x='energy', y='popularity', ax=ax)
+            ax.set_title('Popularity vs. Energy for Setlist Entries')
+            ax.set_xlabel('Energy')
+            ax.set_ylabel('Popularity')
+            st.pyplot(fig)
+        else:
+            st.error('The necessary columns are not present in the DataFrame.')
+    else:
+        st.error("DataFrame does not contain the 'Setlist' column.")
+
 
 def time_series_plot_pop_over_time(df):
     if df.empty:
@@ -545,8 +570,11 @@ def main():
     st.header('Popularity vs Track Duration Scatter Plot')
     popularity_versus_track_duration_scatter_plot(combined_kaggle_spotify)
 
-    st.header('Popularity vs Track Duration For Songs in Setlist Scatter Plot')
+    st.header('Popularity vs Track Duration For Setlist Specific Songs Scatter Plot')
     popularity_setlist_versus_track_duration_scatter_plot(combined_data)
+
+    st.header('Popularity vs Energy For Setlist Specific Songs Scatter Plot')
+    popularity_setlist_versus_energy_scatter_plot(combined_data)
 
     # plot_alternative_visualizations(filtered_tracks)
 
