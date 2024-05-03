@@ -281,15 +281,15 @@ def time_series_plot_pop_over_time(df):
         return
 
     # Time Series Plot for Popularity Over Time
-    if 'release_date' in df.columns and 'popularity_y' in df.columns:
+    if 'release_date' in df.columns and 'popularity' in df.columns:
         # Date
         df['release_date'] = pd.to_datetime(df['release_date'], format='%m/%d/%y', errors='coerce')
-        time_data = df.dropna(subset=['release_date', 'popularity_y'])
+        time_data = df.dropna(subset=['release_date', 'popularity'])
         time_data = time_data.sort_values('release_date')
 
         # Plot
         fig, ax = plt.subplots()
-        sns.lineplot(x='release_date', y='popularity_y', data=time_data, ax=ax)
+        sns.lineplot(x='release_date', y='popularity', data=time_data, ax=ax)
         ax.set_title('Popularity Over Time')
         ax.set_xlabel('Release Date')
         ax.set_ylabel('Popularity')
@@ -301,8 +301,8 @@ def pie_chart_album_contribution(df):
         return
     
     # Pie Chart for Album Contribution
-    if 'Album' in df.columns and 'popularity_y' in df.columns:
-        album_contribution = df.groupby('Album')['popularity_y'].sum()
+    if 'Album' in df.columns and 'popularity' in df.columns:
+        album_contribution = df.groupby('Album')['popularity'].sum()
         fig, ax = plt.subplots()
         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
         ax.set_title('Recent Album Contribution to Overall Popularity')
@@ -315,7 +315,7 @@ def correlation_heatmap(df):
         st.error("DataFrame is empty. No data to display.")
         return
     
-    cols_to_check = ['popularity_y', 'duration_ms_y', 'energy', 'danceability', 'acousticness', 'valence']
+    cols_to_check = ['popularity', 'duration_ms', 'energy', 'danceability', 'acousticness', 'valence']
     cols_available = [col for col in cols_to_check if col in df.columns]
     
     if not cols_available:
@@ -339,8 +339,8 @@ def interactive_scatter_plot(df):
     # User Selection
     x_options = df.select_dtypes(include=['float64', 'int']).columns.tolist()
     y_options = x_options
-    x_axis = st.selectbox("Choose X-axis", options=x_options, index=x_options.index('duration_ms_y'))
-    y_axis = st.selectbox("Choose Y-axis", options=y_options, index=y_options.index('popularity_y'))
+    x_axis = st.selectbox("Choose X-axis", options=x_options, index=x_options.index('duration_ms'))
+    y_axis = st.selectbox("Choose Y-axis", options=y_options, index=y_options.index('popularity'))
 
     # Plot
     chart = alt.Chart(df).mark_circle(size=60).encode(
@@ -379,7 +379,7 @@ def interactive_time_series(df):
         return
 
     fig, ax = plt.subplots()
-    sns.lineplot(x='release_date', y='popularity_y', data=filtered_data, ax=ax)
+    sns.lineplot(x='release_date', y='popularity', data=filtered_data, ax=ax)
     ax.set_title(f'Popularity Over Time in {year_to_view}')
     ax.set_xlabel('Release Date')
     ax.set_ylabel('Popularity')
@@ -469,17 +469,17 @@ def main():
     filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
 
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
-    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist'])
+    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist']).sort_values('name')
 
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
     filtered_tracks = filtered_tracks.drop(columns='track_id')
 
     st.header('setlist')
-    st.write(filtered_setlist_data.head(50))
+    st.write(filtered_setlist_data)
     st.header('kaggle')
-    st.write(filtered_spotify_data.head(50))
+    st.write(filtered_spotify_data)
     st.header('spotify')
-    st.write(filtered_tracks.head(50))
+    st.write(filtered_tracks)
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
@@ -502,7 +502,7 @@ def main():
     popularity_versus_track_duration_scatter_plot(filtered_tracks)
     # plot_alternative_visualizations(filtered_tracks)
 
-    if not combined_data.empty and {'popularity_y', 'duration_ms_y'}.issubset(combined_data.columns):
+    if not combined_data.empty and {'popularity', 'duration_ms'}.issubset(combined_data.columns):
         st.header('Correlation Heatmap of Combined Data')
         correlation_heatmap(combined_data)
     else:
