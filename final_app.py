@@ -219,7 +219,7 @@ def load_spotify_tracks_db():
 def analyze_overlaps(df1, df2, df3, key):
     combined_kaggle_spotify = pd.merge(df2, df3, on=key, how='inner')
     st.header('kaggle and spotify')
-    st.write(combined_kaggle_spotify.head(15))
+    st.write(combined_kaggle_spotify)
     combined_data = pd.merge(df1, combined_kaggle_spotify, on=key, how='outer')
     #final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return combined_data
@@ -469,10 +469,10 @@ def main():
     filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
 
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
-    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'popularity', 'id', 'artists', 'Artist'])
+    filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'id', 'artists', 'Artist'])
 
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
-    filtered_tracks = filtered_tracks.drop(columns='track_id').sort_values('name')
+    filtered_tracks = filtered_tracks.drop(columns=['track_id', 'popularity']).sort_values('name').drop_duplicates(subset='name', keep='first')
 
     st.header('setlist')
     st.write(filtered_setlist_data)
