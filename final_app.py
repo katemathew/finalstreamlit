@@ -496,10 +496,12 @@ def main():
     filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
     filtered_tracks = tracks[tracks['Artist'] == selected_artist]
-
-    st.write(filtered_setlist_data.head())
-    st.write(filtered_spotify_data.head())
-    st.write(filtered_tracks.head())
+    st.header('setlist')
+    st.write(filtered_setlist_data.head(15))
+    st.header('kaggle')
+    st.write(filtered_spotify_data.head(15))
+    st.header('spotify')
+    st.write(filtered_tracks.head(15))
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
