@@ -523,7 +523,14 @@ def main():
     artist_list = [artist for artist in tracks['Artist'].unique() if artist.lower() in allowed_artists]
 
     # Artist selection dropdown
-    selected_artist = st.selectbox('**Select an Artist**', artist_list)
+    # selected_artist = st.selectbox('**Select an Artist**', artist_list)
+
+    # Creating a header for the artist selection
+    st.header('Select an Artist')
+
+    # Artist selection dropdown
+    selected_artist = st.selectbox('', artist_list)
+
 
     # Filter data by selected artist
     # filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
