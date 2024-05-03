@@ -34,7 +34,6 @@ class Album(Base):
     __tablename__ = 'albums'
     id = Column(String, primary_key=True)
     name = Column(String)
-    release_date = Column(String)
     artist_id = Column(String, ForeignKey('artists.id'))
     artist = relationship("Artist", back_populates="albums")
     tracks = relationship("Track", back_populates="album")
@@ -122,6 +121,7 @@ def fetch_and_save_spotify_data():
 
     # Database connection setup
     engine = create_engine(database_url)
+    connection = engine.connect()
     create_database_tables(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
