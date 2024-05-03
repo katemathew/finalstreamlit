@@ -195,7 +195,7 @@ def load_spotify_tracks_db():
 
     return tracks
 
-def analyze_overlaps(df1, df2, df3, key='name'):
+def analyze_overlaps(df1, df2, df3, key):
     combined_data = pd.merge(df1, df2, on=key, how='inner')
     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return final_combined_data
@@ -511,7 +511,7 @@ def main():
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
-    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
+    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'name')
     st.write(combined_data)
 
     # Explanation about Spotify Popularity Index
