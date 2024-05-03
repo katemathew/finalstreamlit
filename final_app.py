@@ -304,8 +304,8 @@ def pie_chart_album_contribution(df):
     if 'Album' in df.columns and 'popularity' in df.columns:
         album_contribution = df.groupby('Album')['popularity'].sum()
         fig, ax = plt.subplots()
-        fig.set_figwidth(10)
-        fig.set_figheight(8)
+        fig.set_figwidth(12)
+        fig.set_figheight(10)
         album_contribution.plot(kind='pie', ax=ax, autopct='%1.1f%%')
         ax.set_title('Recent Album Contribution to Overall Popularity')
         ax.set_ylabel('')
@@ -384,7 +384,7 @@ def interactive_time_series(df):
     sns.lineplot(x='release_date', y='popularity', data=filtered_data, ax=ax)
     ax.set_title(f'Popularity Over Time in {year_to_view}')
     ax.set_xlabel('Release Date')
-    ax.tick_params(axis='x', labelsize=8)
+    ax.tick_params(axis='x', labelsize=6)
     ax.set_ylabel('Popularity')
     st.pyplot(fig)
 
