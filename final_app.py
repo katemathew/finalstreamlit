@@ -14,6 +14,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 # Load environment variables from .env file
 #load_dotenv()
 
+#Trouble Setting Up Environment, Keep Code For Further Security/Optimization
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
@@ -21,8 +23,6 @@ def create_database_tables(engine):
     Base.metadata.create_all(engine)
 # Database schema setup
 Base = declarative_base()
-
-#Trouble Setting Up Environment, Keep Code For Further Security/Optimization
 
 class Artist(Base):
     __tablename__ = 'artists'
@@ -112,6 +112,7 @@ def fetch_and_save_spotify_data():
         'The Weeknd': 'spotify:artist:1Xyo4u8uXC1ZmMpatF05PJ',
         'Drake': 'spotify:artist:3TVXtAsR1Inumwj472S9r4'
     }
+    #Additional Artist URIs
     # 'Morgan Wallen': 'spotify:artist:4oUHIQIBe0LHzYfvXNW4QM',
     # 'Peso Pluma': 'spotify:artist:12GqGscKJx3aE4t07u7eVZ',
     #     'Metro Boomin': 'spotify:artist:0iEtIxbK0KxaSlF7G42ZOp',
@@ -275,6 +276,8 @@ def popularity_versus_track_duration_scatter_plot(df):
         ax.set_ylabel('Popularity')
         st.pyplot(fig)
 
+ç
+
 def time_series_plot_pop_over_time(df):
     if df.empty:
         st.write("No data available for plot.")
@@ -420,14 +423,16 @@ def main():
         My analysis reveals certain trends and artist-specific tendencies that highlight the intersection between various musical attributes and song popularity. It is important to note the subjectivity of music, and while there were general and artist based trends, many aspects of songs and popularity cannot be measured easily, as there are outside factors that can influence these decisions. Here are some key insights:
 
         **General Trends:**
-        - **Duration vs. Popularity:** Observed a general trend where shorter song durations correlate with higher popularity, as indicated by a negative correlation of -0.61. This trend aligns with current listener preferences for shorter tracks, likely influenced by shorter attention spans. However, notable exceptions such as Taylor Swift’s "All Too Well (10 Minute Version)" demonstrate that long tracks can also achieve significant popularity.
+        - **Duration vs. Popularity:** Observed a general trend where shorter song durations correlate with higher popularity, as indicated by a negative correlation of -0.45 (Taylor Swift) & -0.62 (The Weeknd). This trend aligns with current listener preferences for shorter tracks, likely influenced by shorter attention spans. However, notable exceptions such as Taylor Swift’s "All Too Well (10 Minute Version)" and Drake's correlation value of only -0.13 demonstrate that long tracks can also achieve significant popularity.
 
         **Energy and Acoustics:**
         - Tracks with lower acoustic features typically exhibit higher energy levels. This suggests a preference for more electronically produced or upbeat music, which can vary significantly across different musical genres.
 
         **Artist-Specific Observations:**
-        - **Taylor Swift:** For Taylor Swift, the link between track duration and popularity is particularly pronounced, providing insights into her song production strategy and its impact on commercial success.
-        - **Drake:** Drake's tracks show weaker overall correlations, highlighting the diversity in his musical style. Notably, a negative correlation between energy and danceability in his music suggests that higher energy does not always enhance danceability, possibly due to the genre of rap, lyrical focus, or complex rhythms that characterize his songs.
+        - **Taylor Swift:** For Taylor Swift, there is a particularily strong negative correlation between energy and acoustics, mirroring the style and in-depth lyrical work she puts into her slower, sadder songs.
+        - **Bad Bunny:** With Bad Bunny, the strongest correlation was between valence and duration, showing that typically, as his songs get longer, they become more negative/sad (valence decreases). This goes hand in hand with a negative correlation between energy and acoustics, as explained above for Taylor Swift.
+        - **The Weeknd:** For The Weeknd, the link between track duration and popularity is particularly pronounced, providing insights into his song production strategy and its impact on commercial success.
+        - **Drake:** Drake's tracks show weaker overall correlations, highlighting the diversity in his musical style. Notably, a negative correlation between duration and danceability in his music suggests that a longer duration typically decreases danceability, possibly due to the genre of rap, lyrical focus, or complex rhythms that characterize his songs.
 
         These insights can be instrumental for artists, producers, and music platforms in making informed decisions about song production and curation. I encourage you to explore the correlation heatmap to uncover additional insights and understand how various musical elements interact across different artists and genres. Dive into the analysis and see what unique correlations resonate with or challenge your understanding of music!
     """) 
@@ -437,7 +442,7 @@ def main():
         - **Environmental Variables & Security**: Even after establishing environmental variables to protect sensitive information and testing locally, when brought to Github and Streamlit Share, the variables were not found in the app.
         - **Multipage Scraper**: There was trouble scraping data that had pagination incorporated as well as undefined html variables, especially when it was not consistent throughout the website.
         - **Heroku Database & CSV’s**: Limited capacity.
-        - **Variable Consistency in Combined Dataset**: As this data is compiled by multiple sources, there are parts of the combined dataset that will duplicate or not match up, as they refer to different variables and correlations depending on where they are scraped from.
+        - **Variable Consistency in Combined Dataset**: As this data is compiled by multiple sources, there are parts of the combined dataset that are not available for all rows, as they refer to different variables and correlations depending on where they are scraped from.
         """)
 
     
@@ -447,15 +452,15 @@ def main():
 
     # Setlist Data Expander
     with st.expander("**Setlist Data** - This data was retrieved from setlist.fm, a top site for discovering features for live events. Click To Explore A Few Lines."):
-        st.write(setlist_data.head())
+        st.write(setlist_data.head(25))
 
     # Spotify Filtered Data Expander
     with st.expander("**Kaggle: Spotify Filtered Data** - This data was retrieved from a Kaggle dataset, compiling Spotify data from the 2000's to 2020. Click To Explore A Few Lines."):
-        st.write(spotify_data.head())
+        st.write(spotify_data.head(25))
 
     # Spotify Tracks Data Expander
     with st.expander("**Spotify Tracks Data** - This data was retrieved from the Spotify API, providing current metrics for songs and artists. Click To Explore A Few Lines."):
-        st.write(tracks.head(50))
+        st.write(tracks.head(25))
 
 
     # Define a list of allowed artists
@@ -468,8 +473,13 @@ def main():
     selected_artist = st.selectbox('**Select an Artist**', artist_list)
 
     # Filter data by selected artist
+    # filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
+    # filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
+
     filtered_setlist_data = setlist_data[setlist_data['Artist'] == selected_artist]
     filtered_setlist_data = filtered_setlist_data.drop(columns='Artist')
+    filtered_setlist_data['Setlist'] = 1
+
 
     filtered_spotify_data = spotify_data[spotify_data['Artist'] == selected_artist]
     filtered_spotify_data = filtered_spotify_data.drop_duplicates(subset='name', keep='first').drop(columns=['duration_ms', 'id', 'artists', 'Artist'])
