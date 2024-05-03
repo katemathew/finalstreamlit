@@ -195,24 +195,9 @@ def load_spotify_tracks_db():
 
     return tracks
 
-# def analyze_overlaps(df1, df2, df3, key='Artist'):
-#     combined_data = pd.merge(df1, df2, on=key, how='inner')
-#     final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
-#     return final_combined_data
-
-def analyze_overlaps(df1, df2, df3):
-    # Ensure the 'name' column is also considered alongside 'Artist' for merging
-    keys = ['Artist', 'name']
-    
-    # Merge df1 and df2 on both 'Artist' and 'name' with inner join to ensure only matching entries are included
-    combined_data = pd.merge(df1, df2, on=keys, how='inner')
-    
-    # Merge the combined data with df3 on the same keys and with inner join
-    final_combined_data = pd.merge(combined_data, df3, on=keys, how='inner')
-    
-    # Drop duplicates if any exist after merging
-    final_combined_data = final_combined_data.drop_duplicates(subset=keys)
-    
+def analyze_overlaps(df1, df2, df3, key='Artist'):
+    combined_data = pd.merge(df1, df2, on=key, how='inner')
+    final_combined_data = pd.merge(combined_data, df3, on=key, how='inner')
     return final_combined_data
 
 
@@ -452,7 +437,7 @@ def main():
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
-    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks)
+    combined_data = analyze_overlaps(filtered_setlist_data, filtered_spotify_data, filtered_tracks, 'Artist')
     st.write(combined_data)
 
     st.header('Song Popularity')
