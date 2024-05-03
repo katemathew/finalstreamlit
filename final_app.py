@@ -70,25 +70,6 @@ def fetch_album_tracks(album_id):
         tracks.extend(results['items'])
     return tracks
 
-
-# def fetch_artist_top_tracks(artist_uri):
-#     results = sp.artist_top_tracks(artist_uri)
-#     tracks_data = []
-#     for track in results['tracks']:
-#         track_data = {
-#             'track_id': track['id'],
-#             'name': track['name'],
-#             'popularity': track['popularity'],
-#             'duration_ms': track['duration_ms'],
-#             'album_id': track['album']['id'],
-#             'album_name': track['album']['name'],
-#             'release_date': track['album']['release_date'],
-#             'artist_id': track['artists'][0]['id'],
-#             'artist_name': track['artists'][0]['name']
-#         }
-#         tracks_data.append(track_data)
-#     return tracks_data
-
 def clean_artist_name(name):
     """Clean artist names by removing unwanted characters and making them lowercase."""
     return name.replace('[', '').replace(']', '').replace("'", "").strip().lower()
@@ -141,62 +122,34 @@ def fetch_and_save_spotify_data():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # try:
-    #     for artist_name, artist_uri in artist_uris.items():
-    #         try:
-    #             tracks_data = fetch_artist_top_tracks(artist_uri)
-    #             for data in tracks_data:
-    #                 try:
-    #                     artist = session.query(Artist).filter_by(id=data['artist_id']).first()
-    #                     if not artist:
-    #                         artist = Artist(id=data['artist_id'], name=data['artist_name'])
-    #                         session.add(artist)
-    #                     album = session.query(Album).filter_by(id=data['album_id']).first()
-    #                     if not album:
-    #                         album = Album(id=data['album_id'], name=data['album_name'], release_date=data['release_date'], artist=artist)
-    #                         session.add(album)
-    #                     track = session.query(Track).filter_by(id=data['track_id']).first()
-    #                     if not track:
-    #                         track = Track(id=data['track_id'], name=data['name'], popularity=data['popularity'], duration_ms=data['duration_ms'], album=album)
-    #                         session.add(track)
-    #                 except Exception as e:
-    #                     logging.error(f"Error saving track data for {artist_name}: {e}")
-    #         except Exception as e:
-    #             logging.error(f"Error fetching Spotify data for {artist_name}: {e}")
-    #         session.commit()
-    # except Exception as e:
-    #     logging.error(f"Database operation failed: {e}")
-    #     session.rollback()
-    # finally:
-    #     session.close()
-
-    try:
-        for artist_name, artist_uri in artist_uris.items():
+    for artist_name, artist_uri in artist_uris.items():
+        try:
             albums = fetch_artist_albums(artist_uri)
             for album in albums:
                 tracks = fetch_album_tracks(album['id'])
                 for track in tracks:
                     try:
+                        # Ensuring each artist and album is only added once
                         artist = session.query(Artist).filter_by(id=track['artists'][0]['id']).first()
                         if not artist:
                             artist = Artist(id=track['artists'][0]['id'], name=track['artists'][0]['name'])
                             session.add(artist)
-                        album = session.query(Album).filter_by(id=album['id']).first()
-                        if not album:
-                            album = Album(id=album['id'], name=album['name'], release_date=album['release_date'], artist=artist)
-                            session.add(album)
-                        track = session.query(Track).filter_by(id=track['id']).first()
-                        if not track:
-                            track = Track(id=track['id'], name=track['name'], popularity=track.get('popularity', 0), duration_ms=track['duration_ms'], album=album)
-                            session.add(track)
+                        album_record = session.query(Album).filter_by(id=album['id']).first()
+                        if not album_record:
+                            album_record = Album(id=album['id'], name=album['name'], release_date=album['release_date'], artist_id=artist.id)
+                            session.add(album_record)
+                        # Checking for the existence of the track
+                        track_record = session.query(Track).filter_by(id=track['id']).first()
+                        if not track_record:
+                            track_record = Track(id=track['id'], name=track['name'], popularity=track.get('popularity', 0), duration_ms=track['duration_ms'], album_id=album_record.id)
+                            session.add(track_record)
                     except Exception as e:
-                        logging.error(f"Error saving track data for {artist_name}: {e}")
-            session.commit()
-    except Exception as e:
-        logging.error(f"Database operation failed: {e}")
-        session.rollback()
-    finally:
-        session.close()
+                        logging.error(f"Error processing track data for {artist_name}: {e}")
+            session.commit()  # Committing after processing each artist to manage transaction sizes
+        except Exception as e:
+            logging.error(f"Error fetching data for {artist_name}: {e}")
+            session.rollback()  # Rolling back in case of failure
+    session.close()  # Closing the session after all processing is done
 
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
