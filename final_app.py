@@ -17,6 +17,8 @@ from spotipy.oauth2 import SpotifyClientCredentials
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
+def create_database_tables(engine):
+    Base.metadata.create_all(engine)
 # Database schema setup
 Base = declarative_base()
 
@@ -120,6 +122,7 @@ def fetch_and_save_spotify_data():
 
     # Database connection setup
     engine = create_engine(database_url)
+    create_database_tables(engine)
     Session = sessionmaker(bind=engine)
     session = Session()
     all_tracks = []  # List to store track dictionaries for CSV output
