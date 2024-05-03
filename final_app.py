@@ -122,7 +122,7 @@ def fetch_and_save_spotify_data():
     engine = create_engine(database_url)
     Session = sessionmaker(bind=engine)
     session = Session()
-
+    all_tracks = []  # List to store track dictionaries for CSV output
     for artist_name, artist_uri in artist_uris.items():
         try:
             albums = fetch_artist_albums(artist_uri)
@@ -144,6 +144,14 @@ def fetch_and_save_spotify_data():
                         if not track_record:
                             track_record = Track(id=track['id'], name=track['name'], popularity=track.get('popularity', 0), duration_ms=track['duration_ms'], album_id=album_record.id)
                             session.add(track_record)
+                            # Append track info to list for CSV
+                            all_tracks.append({
+                                'Track ID': track['id'],
+                                'Track Name': track['name'],
+                                'Popularity': track.get('popularity', 0),
+                                'Duration (ms)': track['duration_ms'],
+                                'Album ID': album_record.id
+                            })
                     except Exception as e:
                         logging.error(f"Error processing track data for {artist_name}: {e}")
             session.commit()  # Committing after processing each artist to manage transaction sizes
@@ -151,6 +159,11 @@ def fetch_and_save_spotify_data():
             logging.error(f"Error fetching data for {artist_name}: {e}")
             session.rollback()  # Rolling back in case of failure
     session.close()  # Closing the session after all processing is done
+    if all_tracks:
+        df_tracks = pd.DataFrame(all_tracks)
+        df_tracks.to_csv('tracks_data.csv', index=False)
+        logging.info("Tracks data has been saved to CSV.")
+
 
 def load_setlist_data():
     df = pd.read_csv('setlist_data.csv')
