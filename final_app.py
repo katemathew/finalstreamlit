@@ -196,7 +196,7 @@ def load_spotify_tracks_db():
     return tracks
 
 def analyze_overlaps(df1, df2, df3, key):
-    combined_kaggle_spotify = pd.merge(df2, df3, on=key, how='inner')
+    combined_kaggle_spotify = pd.merge(df2, df3, on=key, how='outer')
     st.header('kaggle and spotify')
     st.write(combined_kaggle_spotify.head(15))
     combined_data = pd.merge(df1, combined_kaggle_spotify, on=key, how='outer')
@@ -506,11 +506,11 @@ def main():
     filtered_tracks = filtered_tracks.drop(columns='track_id')
 
     st.header('setlist')
-    st.write(filtered_setlist_data.head(15))
+    st.write(filtered_setlist_data.head(50))
     st.header('kaggle')
-    st.write(filtered_spotify_data.head(15))
+    st.write(filtered_spotify_data.head(50))
     st.header('spotify')
-    st.write(filtered_tracks.head(15))
+    st.write(filtered_tracks.head(50))
 
     # Display Combined Data for selected artist
     st.header(f'Combined Data for {selected_artist}')
