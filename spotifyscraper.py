@@ -68,8 +68,8 @@ def fetch_artist_top_tracks(sp, artist_uri):
     return tracks_data
 
 def main():
-    client_id = '5b2023b50cd44ccca291f436252f1381'
-    client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
+    client_id = ''
+    client_secret = ''
     artist_uris = {
         'Taylor Swift': 'spotify:artist:06HL4z0CvFAxyc27GXpf02',
         'Bad Bunny': 'spotify:artist:4q3ewBCX7sLwd24euuV69X',
