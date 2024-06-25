@@ -48,8 +48,8 @@ class Track(Base):
     album = relationship("Album", back_populates="tracks")
 
 # Initialize Spotify client
-client_id = '5b2023b50cd44ccca291f436252f1381'
-client_secret = 'b87bc93755134e1e97bf139ca8855ca7'
+client_id = ''
+client_secret = ''
 credentials = SpotifyClientCredentials(client_id=client_id, client_secret=client_secret)
 sp = spotipy.Spotify(client_credentials_manager=credentials)
 
@@ -119,7 +119,7 @@ def fetch_and_save_spotify_data():
     #     'Karol G': 'spotify:artist:790FomKkXshlbRYZFtlgla',
     #     'Future': 'spotify:artist:1RyvyyTE3xzB2ZywiAwp0i',
     #     'Tame Impala': 'spotify:artist:5INjqkS1o8h1imAzPqGZBb'
-    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
+    database_url = ""
     sp = spotipy.Spotify(client_credentials_manager=credentials)
     # Database connection setup
     engine = create_engine(database_url)
@@ -188,7 +188,7 @@ def load_filtered_spotify_data():
     return df
 
 def load_spotify_tracks_db():
-    database_url = "postgresql://u4ja2bod19v7gd:p9e70065bd97ea89a78fd91429d857f1c6dcb32c248a847c624d3a359bdeba876@ce1r1ldap2qd4b.cluster-czrs8kj4isg7.us-east-1.rds.amazonaws.com:5432/db3gjtci88doqv"
+    database_url = ""
 
     # Database connection setup
     engine = create_engine(database_url)
